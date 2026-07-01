@@ -1,0 +1,145 @@
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using static RootMotion.FinalIK.GrounderQuadruped;
+using static RootMotion.FinalIK.Grounding;
+
+public class IKTargetController : MonoBehaviour
+{
+    [Header("* MOCAP")]
+    [SerializeField] mocapFront mcFront;
+    [SerializeField] mocapSide mcSide;
+
+    [Header("* IK TARGETS")]
+    [SerializeField] Transform IKTarget_PelvisRoot;
+    [SerializeField] Transform IKTarget_Pelvis;
+    [SerializeField] Transform IKTarget_SpineRoot;
+    [SerializeField] Transform IKTarget_Spine;
+    [SerializeField] Transform IKTarget_LeftFoot;
+    [SerializeField] Transform IKTarget_RightFoot;
+    //[SerializeField] Transform IKTarget_RightUpperArm;
+    [SerializeField] Transform IKTarget_RightForearm;
+    [SerializeField] Transform IKTarget_LeftKnee;
+    [SerializeField] Transform IKTarget_RightKnee;
+
+
+    [Header("* IK REF OBJECTS(PRO)")]
+    [SerializeField] Transform ProBone_Pelvis;
+    [SerializeField] Transform ProBone_Spine;
+    [SerializeField] Transform ProBone_LeftFoot;
+    [SerializeField] Transform ProBone_RightFoot;
+    [SerializeField] Transform ProBone_LeftKnee;
+    [SerializeField] Transform ProBone_RightKnee;
+
+    [Header("* IK REF OBJECTS(USER)")]
+    [SerializeField] Transform UserBone_Pelvis;
+    [SerializeField] Transform UserBone_Spine;
+    [SerializeField] Transform UserBone_LeftFoot;
+    [SerializeField] Transform UserBone_RightFoot;
+    //[SerializeField] Transform UserBone_RightUpperArm;
+    [SerializeField] Transform userBone_RightShoulder;
+    [SerializeField] Transform userBone_RightForearm;
+
+    Vector3 DefaultPelvis;
+    Vector3 DefaultFoot;
+    float defaultSPDis;
+
+    [Space(10)]
+    [SerializeField] Transform Pro_S;
+    [SerializeField] Transform Pro_P;
+    [SerializeField] Transform Pro_F;
+    [SerializeField] Transform Ik_S;
+    [SerializeField] Transform Ik_P;
+    [SerializeField] Transform Ik_F;
+    [SerializeField] Transform IMocap_S;
+    [SerializeField] Transform IMocap_P;
+    [SerializeField] Transform IMocap_F;
+
+    [SerializeField] TextMeshProUGUI txtDebug;
+
+    IEnumerator Start()
+    {
+        DefaultPelvis = IKTarget_Pelvis.position;
+        DefaultFoot = IKTarget_LeftFoot.position;
+        //Debug.Log(CalculateAngleDistance(IKTarget_LeftFoot.position.y, p1, 90f));
+        //defaultSPDis = Vector3.Distance(ProBone_Pelvis, DefaultFoot);        
+        yield return new WaitForSeconds(0.5f);
+        DefaultFoot = ProBone_LeftFoot.position;
+        IKTarget_PelvisRoot.position = ProBone_Pelvis.position;
+        //IKTarget_Pelvis.position = ProBone_Pelvis.position;
+
+        StartCoroutine(CoUpdate());
+    }
+
+    // Update is called once per frame
+    IEnumerator CoUpdate()
+    {
+        while (true)
+        {
+            yield return null;
+            txtDebug.text = $"F:{mcFront.AvgVisibility}\r\nS:{mcSide.AvgVisibility}";
+
+            Pro_F.position = Utillity.GetCenter(ProBone_LeftFoot.position, ProBone_RightFoot.position);
+            Pro_P.position = ProBone_Pelvis.position;
+            Pro_S.position = ProBone_Spine.position;
+
+            //발 고정
+            IKTarget_LeftFoot.position = ProBone_LeftFoot.position;
+            IKTarget_RightFoot.position = ProBone_RightFoot.position;
+            Ik_F.position = Utillity.GetCenter(IKTarget_LeftFoot.position, IKTarget_RightFoot.position);
+
+            //인식률 체크//
+            if (mcFront.AvgVisibility < 0.7f || mcSide.AvgVisibility < 0.6f)
+                continue;
+
+            //센터값 계산
+            Vector3 footF = mcFront.FootCenter();
+            Vector3 footS = mcSide.FootCenter();
+            footF.z = footS.z;
+            IMocap_F.position = footF;
+
+            Vector3 pelvisF = mcFront.PelvisCenter();
+            Vector3 pelvisS = mcSide.PelvisCenter();
+            pelvisF.z = pelvisS.z;
+            IMocap_P.position = pelvisF;
+
+            Vector3 shoulderF = mcFront.ShoulderCenter();
+            Vector3 shoulderS = mcSide.ShoulderCenter();
+            shoulderF.z = shoulderS.z;
+            IMocap_S.position = shoulderF;
+
+            //무릎
+            Vector3[] KneeDirs = mcFront.GetKneeDir();
+            //IKTarget_LeftKnee.position = Vector3.Lerp(IKTarget_LeftFoot.position + KneeDirs[0], ProBone_LeftKnee.position, 0.5f); //dis:0.38f
+            //IKTarget_RightKnee.position = Vector3.Lerp(IKTarget_RightFoot.position + KneeDirs[1], ProBone_RightKnee.position, 0.5f);
+            IKTarget_LeftKnee.position = ProBone_LeftKnee.position; //dis:0.38f
+            IKTarget_RightKnee.position = ProBone_RightKnee.position;
+
+            //골반
+            //IKTarget_Pelvis.position = ProBone_Pelvis.position;
+            Vector3 dir = (pelvisF - footF).normalized;
+            Vector3 Base = Utillity.GetCenter(IKTarget_LeftFoot.position, IKTarget_RightFoot.position);
+            Vector3 vPelvis = Base + dir * mcFront.GetPelvisFootDis();
+            IKTarget_PelvisRoot.position = vPelvis;
+            IKTarget_PelvisRoot.rotation = mcFront.GetLookRotationPelvis();
+            Ik_P.position = IKTarget_Pelvis.position;
+
+            //상체
+            //IKTarget_Spine.position = UserBone_Spine.position;
+            dir = (shoulderF - pelvisF);//.normalized;
+            Vector3 vSpine = vPelvis + dir;
+            IKTarget_SpineRoot.position = vSpine;
+            IKTarget_SpineRoot.rotation = mcFront.GetLookRotationShoulder();
+            Ik_S.position = IKTarget_Spine.position;
+
+            //오른팔
+            Vector3 direction = Utillity.CalculateDirection(mcFront.GetMocapPosition(12), mcFront.GetMocapPosition(14));
+            float dis = Vector3.Distance(userBone_RightShoulder.position, userBone_RightForearm.position);
+            IKTarget_RightForearm.position = userBone_RightShoulder.position + direction * dis;
+
+            //Debug
+            //txtDebug.text += $"{ProBone_LeftFoot.position.y - ProBone_Pelvis.position.y}\r\n{mcFront.GetPelvisFootDis()}\r\n{mcSide.GetPelvisFootDis()}";            
+            txtDebug.text += $"// {Vector3.Distance(ProBone_LeftFoot.position, UserBone_LeftFoot.position)}";
+        }
+    }
+}

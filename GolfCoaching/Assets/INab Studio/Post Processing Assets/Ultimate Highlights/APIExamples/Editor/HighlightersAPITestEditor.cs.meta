@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1695d63f0ab51b845b6845cb655ace3e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 235063
+  packageName: Ultimate Outlines & Highlights
+  packageVersion: 2.4
+  assetPath: Assets/INab Studio/Post Processing Assets/Ultimate Highlights/APIExamples/Editor/HighlightersAPITestEditor.cs
+  uploadId: 696368

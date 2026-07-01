@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 19e7d099a0072a445b37f30e0e3b73ef
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 220574
+  packageName: GolfClub +Swing Motion
+  packageVersion: 1.0
+  assetPath: Assets/Sorashiro/GolfClub_SwingMotion/Models/GolfBall/GolfBall.mat
+  uploadId: 503280

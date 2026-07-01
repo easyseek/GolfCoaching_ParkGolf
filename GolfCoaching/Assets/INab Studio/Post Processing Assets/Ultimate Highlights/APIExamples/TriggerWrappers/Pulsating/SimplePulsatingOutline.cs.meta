@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8d4097fb5b0b45a4299918034c1973c7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 235063
+  packageName: Ultimate Outlines & Highlights
+  packageVersion: 2.4
+  assetPath: Assets/INab Studio/Post Processing Assets/Ultimate Highlights/APIExamples/TriggerWrappers/Pulsating/SimplePulsatingOutline.cs
+  uploadId: 696368

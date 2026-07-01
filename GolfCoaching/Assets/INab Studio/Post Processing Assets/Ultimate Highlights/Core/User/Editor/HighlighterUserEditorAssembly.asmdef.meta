@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f3b47225f08f3ee418c2484bf6955474
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 235063
+  packageName: Ultimate Outlines & Highlights
+  packageVersion: 2.4
+  assetPath: Assets/INab Studio/Post Processing Assets/Ultimate Highlights/Core/User/Editor/HighlighterUserEditorAssembly.asmdef
+  uploadId: 696368

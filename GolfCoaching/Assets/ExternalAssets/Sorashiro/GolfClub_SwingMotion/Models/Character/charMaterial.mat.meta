@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 42c6b65593b925a478075d535e0185f3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 220574
+  packageName: GolfClub +Swing Motion
+  packageVersion: 1.0
+  assetPath: Assets/Sorashiro/GolfClub_SwingMotion/Models/Character/charMaterial.mat
+  uploadId: 503280

@@ -1,0 +1,18 @@
+﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Proyecto26.RestClient.csproj" />
+  <Project Path="RootMotion.csproj" />
+  <Project Path="Mediapipe.Runtime.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="RootMotionEditor.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Highlighters.csproj" />
+  <Project Path="Kamgam.UIToolkitBlurredBackground.csproj" />
+  <Project Path="Mediapipe.Tests.EditMode.csproj" />
+  <Project Path="DOTween.Modules.csproj" />
+  <Project Path="UMotionSourceEditor.csproj" />
+  <Project Path="HighlightersUrp.csproj" />
+  <Project Path="UMotionSourceApplication.csproj" />
+  <Project Path="Proyecto26.RestClient.Demo.csproj" />
+  <Project Path="HighlighterUserEditorAssembly.csproj" />
+</Solution>

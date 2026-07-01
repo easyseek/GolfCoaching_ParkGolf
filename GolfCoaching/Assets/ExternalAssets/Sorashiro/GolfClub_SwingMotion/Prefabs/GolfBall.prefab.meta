@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8a1ae6fc5a2339c4180c61c1276a5a3d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 220574
+  packageName: GolfClub +Swing Motion
+  packageVersion: 1.0
+  assetPath: Assets/Sorashiro/GolfClub_SwingMotion/Prefabs/GolfBall.prefab
+  uploadId: 503280

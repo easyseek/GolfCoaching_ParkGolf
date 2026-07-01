@@ -1,0 +1,235 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4792782812551250597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 205640056382772943}
+  - component: {fileID: 7604096727406000144}
+  m_Layer: 0
+  m_Name: '@ProDataManager'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &205640056382772943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4792782812551250597}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.0731106, y: -0.26000595, z: -0.3741684}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7604096727406000144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4792782812551250597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4882fee9a84ca4ebf42a50544a1b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _proDataList:
+  - _proNum: 0
+    _proImage: {fileID: 21300000, guid: 3d73e3fdd8bb52840b5f272b3c1c5d71, type: 3}
+    _proThumbnail: {fileID: 21300000, guid: 81070c9faeb00c648b244ba5d5cddb03, type: 3}
+    _proname: "\uAE40\uCCA0\uC218"
+    _proInfo: "\uD22C\uC5B4\uD504\uB85C"
+    _proSpecificInfo: "\uD55C\uAD6D\uB0A8\uC790\uD504\uB85C\uACE8\uD504\uD611\uD68C
+      KLPGA"
+    _proGender: "\uB0A8"
+    _proHeight: 165
+  - _proNum: 1
+    _proImage: {fileID: 21300000, guid: 3d73e3fdd8bb52840b5f272b3c1c5d71, type: 3}
+    _proThumbnail: {fileID: 21300000, guid: 81070c9faeb00c648b244ba5d5cddb03, type: 3}
+    _proname: "\uAE40\uBBFC\uC7AC"
+    _proInfo: "\uD22C\uC5B4\uD504\uB85C"
+    _proSpecificInfo: "\uD55C\uAD6D\uB0A8\uC790\uD504\uB85C\uACE8\uD504\uD611\uD68C
+      KLPGA"
+    _proGender: "\uB0A8"
+    _proHeight: 171.5
+  - _proNum: 2
+    _proImage: {fileID: 21300000, guid: 3d73e3fdd8bb52840b5f272b3c1c5d71, type: 3}
+    _proThumbnail: {fileID: 21300000, guid: 81070c9faeb00c648b244ba5d5cddb03, type: 3}
+    _proname: "\uC774\uC2B9\uCCA0"
+    _proInfo: "\uD22C\uC5B4\uD504\uB85C"
+    _proSpecificInfo: "\uD55C\uAD6D\uB0A8\uC790\uD504\uB85C\uACE8\uD504\uD611\uD68C
+      KLPGA"
+    _proGender: "\uB0A8"
+    _proHeight: 171.5
+  - _proNum: 3
+    _proImage: {fileID: 21300000, guid: 3d73e3fdd8bb52840b5f272b3c1c5d71, type: 3}
+    _proThumbnail: {fileID: 21300000, guid: 81070c9faeb00c648b244ba5d5cddb03, type: 3}
+    _proname: "\uD64D\uAE38\uB3D9"
+    _proInfo: "\uD22C\uC5B4\uD504\uB85C"
+    _proSpecificInfo: "\uD55C\uAD6D\uB0A8\uC790\uD504\uB85C\uACE8\uD504\uD611\uD68C
+      KLPGA"
+    _proGender: "\uB0A8"
+    _proHeight: 175
+  - _proNum: 4
+    _proImage: {fileID: 21300000, guid: 3d73e3fdd8bb52840b5f272b3c1c5d71, type: 3}
+    _proThumbnail: {fileID: 21300000, guid: 81070c9faeb00c648b244ba5d5cddb03, type: 3}
+    _proname: "\uBC15\uBBFC\uC8FC"
+    _proInfo: "\uD22C\uC5B4\uD504\uB85C"
+    _proSpecificInfo: "\uD55C\uAD6D\uB0A8\uC790\uD504\uB85C\uACE8\uD504\uD611\uD68C
+      KLPGA"
+    _proGender: "\uC5EC"
+    _proHeight: 161
+  - _proNum: 4
+    _proImage: {fileID: 21300000, guid: 3d73e3fdd8bb52840b5f272b3c1c5d71, type: 3}
+    _proThumbnail: {fileID: 21300000, guid: 81070c9faeb00c648b244ba5d5cddb03, type: 3}
+    _proname: "\uAE40\uBBFC\uC7AC"
+    _proInfo: "\uD22C\uC5B4\uD504\uB85C"
+    _proSpecificInfo: "\uD55C\uAD6D\uB0A8\uC790\uD504\uB85C\uACE8\uD504\uD611\uD68C
+      KLPGA"
+    _proGender: "\uB0A8"
+    _proHeight: 171.5
+  _proIntroduceList:
+  - _proIntroduceText: "\uC548\uB155\uD558\uC138\uC694! \uAE40\uCCA0\uC218 \uC785\uB2C8\uB2E4."
+    _proActivity:
+    - "\uD55C\uAD6D\uCCB4\uC721\uB300\uD559\uAD50 \uD3C9\uC0DD \uAD50\uC721\uC6D0
+      \uACE8\uD504\uAC15\uC0AC"
+    - "\uD65C\uB3D92"
+    _proRecord:
+    - "2022 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2022 ADF 2\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2020 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    _proCertificate:
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 1\uAE09"
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 2\uAE09"
+  - _proIntroduceText: "\uC548\uB155\uD558\uC138\uC694."
+    _proActivity:
+    - "\uD55C\uAD6D\uCCB4\uC721\uB300\uD559\uAD50 \uD3C9\uC0DD \uAD50\uC721\uC6D0
+      \uACE8\uD504\uAC15\uC0AC"
+    - "\uD65C\uB3D92"
+    _proRecord:
+    - "2022 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2022 ADF 2\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2020 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    _proCertificate:
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 1\uAE09"
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 2\uAE09"
+  - _proIntroduceText: "\uC548\uB155\uD558\uC138\uC694."
+    _proActivity:
+    - "\uD55C\uAD6D\uCCB4\uC721\uB300\uD559\uAD50 \uD3C9\uC0DD \uAD50\uC721\uC6D0
+      \uACE8\uD504\uAC15\uC0AC"
+    - "\uD65C\uB3D92"
+    _proRecord:
+    - "2022 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2022 ADF 2\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2020 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    _proCertificate:
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 1\uAE09"
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 2\uAE09"
+  - _proIntroduceText: "\uC548\uB155\uD558\uC138\uC694."
+    _proActivity:
+    - "\uD55C\uAD6D\uCCB4\uC721\uB300\uD559\uAD50 \uD3C9\uC0DD \uAD50\uC721\uC6D0
+      \uACE8\uD504\uAC15\uC0AC"
+    - "\uD65C\uB3D92"
+    _proRecord:
+    - "2022 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2022 ADF 2\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2020 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    _proCertificate:
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 1\uAE09"
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 2\uAE09"
+  - _proIntroduceText: "\uC548\uB155\uD558\uC138\uC694."
+    _proActivity:
+    - "\uD55C\uAD6D\uCCB4\uC721\uB300\uD559\uAD50 \uD3C9\uC0DD \uAD50\uC721\uC6D0
+      \uACE8\uD504\uAC15\uC0AC"
+    - "\uD65C\uB3D92"
+    _proRecord:
+    - "2022 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2022 ADF 2\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2020 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    _proCertificate:
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 1\uAE09"
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 2\uAE09"
+  - _proIntroduceText: "\uC548\uB155\uD558\uC138\uC694."
+    _proActivity:
+    - "\uD55C\uAD6D\uCCB4\uC721\uB300\uD559\uAD50 \uD3C9\uC0DD \uAD50\uC721\uC6D0
+      \uACE8\uD504\uAC15\uC0AC"
+    - "\uD65C\uB3D92"
+    _proRecord:
+    - "2022 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2022 ADF 2\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    - "2020 ADF 1\uBD80 \uC815\uADDC\uD22C\uC5B4 \uD65C\uB3D9"
+    _proCertificate:
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 1\uAE09"
+    - "\uC0DD\uD65C\uC2A4\uD3EC\uCE20 \uC9C0\uB3C4\uC0AC 2\uAE09"
+  _proContentDataList:
+  - _proname: "\uAE40\uCCA0\uC218"
+    _proClubDataList:
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uD480\uC2A4\uC719"
+      _ContentType: "\uB808\uC2A8"
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uADF8\uB9BD"
+      _ContentType: "\uB808\uC2A8"
+  - _proname: "\uAE40\uBBFC\uC7AC"
+    _proClubDataList:
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uD480\uC2A4\uC719"
+      _ContentType: "\uB808\uC2A8"
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uADF8\uB9BD"
+      _ContentType: "\uB808\uC2A8"
+  - _proname: "\uC774\uC2B9\uCCA0"
+    _proClubDataList:
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uD480\uC2A4\uC719"
+      _ContentType: "\uB808\uC2A8"
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uADF8\uB9BD"
+      _ContentType: "\uB808\uC2A8"
+  - _proname: "\uD64D\uAE38\uB3D9"
+    _proClubDataList:
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uD480\uC2A4\uC719"
+      _ContentType: "\uB808\uC2A8"
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uADF8\uB9BD"
+      _ContentType: "\uB808\uC2A8"
+  - _proname: "\uBC15\uBBFC\uC8FC"
+    _proClubDataList:
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uD480\uC2A4\uC719"
+      _ContentType: "\uB808\uC2A8"
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uADF8\uB9BD"
+      _ContentType: "\uB808\uC2A8"
+  - _proname: "\uC544\uBB34\uAC1C"
+    _proClubDataList:
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uD480\uC2A4\uC719"
+      _ContentType: "\uB808\uC2A8"
+    - _ClubId: 1
+      _Club: "\uB4DC\uB77C\uC774\uBC84"
+      _SwingType: "\uADF8\uB9BD"
+      _ContentType: "\uB808\uC2A8"

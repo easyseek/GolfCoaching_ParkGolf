@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9a96475585d9afc4c9d760074c63aa6e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 235063
+  packageName: Ultimate Outlines & Highlights
+  packageVersion: 2.4
+  assetPath: Assets/INab Studio/Post Processing Assets/Ultimate Highlights/APIExamples/TriggerWrappers/Activation/SimpleActivation.cs
+  uploadId: 696368
