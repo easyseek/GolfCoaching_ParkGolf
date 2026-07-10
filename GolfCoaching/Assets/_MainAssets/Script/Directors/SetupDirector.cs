@@ -10,8 +10,6 @@ using System.Linq;
 
 public class SetupDirector : MonoBehaviour
 {
-    public TutorialController m_TutorialController;
-
     private ESetupMode m_ESetupMode = ESetupMode.None;
     public ESetupMode ESetupMode {
         get { return m_ESetupMode; }
@@ -181,7 +179,7 @@ public class SetupDirector : MonoBehaviour
 
         if (GameManager.Instance.IsTutorial)
         {
-            m_TutorialController.StartTutorial();
+            
         }
     }
 

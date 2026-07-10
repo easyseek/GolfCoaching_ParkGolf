@@ -39,13 +39,14 @@ public class BootDirector : MonoBehaviour
         yield return PreloadLocalizationTables();
 
         //키오스크 로그인
+        /*
         float timeout = 15f;
         while(RestManager.Instance.KioskLogin == false)
         {
-            if(timeout > 0)               
+            if(timeout > 0)
             {
                 timeout -= 0.5f;
-                yield return new WaitForSeconds(0.5f);            
+                yield return new WaitForSeconds(0.5f);
             }
             else
             {
@@ -53,6 +54,9 @@ public class BootDirector : MonoBehaviour
                 yield break;
             }
         }
+        */
+
+        yield return new WaitForSeconds(3f);
 
         Init();
     }
@@ -105,9 +109,11 @@ public class BootDirector : MonoBehaviour
 #endif
         Utillity.Instance.SetResolution(width, height);
 
-        GolfProDataManager.Instance.LoadProData();
+        //프로 데이터 로드 임시 스킵
+        //GolfProDataManager.Instance.LoadProData();
 
-        
+        GameManager.Instance.SelectedSceneName = "Login";
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Login");
     }
 
     private void OnApplicationQuit()

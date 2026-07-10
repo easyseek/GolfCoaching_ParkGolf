@@ -10,8 +10,6 @@ using System.Linq;
 
 public class PoseDirector : MonoBehaviour
 {
-    public TutorialController m_TutorialController;
-
     [SerializeField] private RectTransform m_PoseContainerRect;
 
     [SerializeField] private GameObject[] m_modeToggleObj;
@@ -78,7 +76,7 @@ public class PoseDirector : MonoBehaviour
 
         if (GameManager.Instance.IsTutorial)
         {
-            m_TutorialController.StartTutorial();
+            
         }
 
     }

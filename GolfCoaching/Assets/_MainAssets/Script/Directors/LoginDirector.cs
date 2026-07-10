@@ -26,12 +26,9 @@ using Unity.VisualScripting;
 public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializationCallbackReceiver
 {
     //[SerializeField]  webcamclient wcclient;
-    public TutorialController m_TutorialController;
-    public CanvasGroup m_SpoexModePanel;
 
     // -----------------------------------------------------------
     public CanvasGroup m_LoginPanel;
-    public CanvasGroup m_IntroPanel;
 
     //private Thread pipe1ClientThread;
     //private Thread pipe2ClientThread;
@@ -46,6 +43,7 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
 
     [SerializeField] TextMeshProUGUI txtVer;
     [SerializeField] private QrLoginImage qrLoginImage;
+    [SerializeField] private GameObject timePanel;
 
     [Header("Kiosk QR Login Test")]
     [SerializeField] private bool requestQrOnStart = true;
@@ -95,8 +93,9 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
         GameManager.Instance.IsTutorial = false;
 
         if (m_LoginPanel != null)
-        m_LoginPanel.alpha = 1f;
-        m_IntroPanel.alpha = 0f;
+            m_LoginPanel.alpha = 1f;
+
+        SetTimePanel(false);
 
         if (requestQrOnStart)
         {
@@ -366,8 +365,7 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
     public void LoginSuccess()
     {
         Debug.Log("LoginSuccess()");
-        //ClearQrLoginUrl();
-        StartCoroutine(TranstionToIntro());
+        ShowTimePanel();
     }
 
     public void SetQrLoginUrl(string loginUrl)
@@ -401,11 +399,7 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
         Debug.Log("TranstionToIntro()");
         yield return m_LoginPanel.DOFade(0, m_FadeDuration).WaitForCompletion();
 
-        yield return m_IntroPanel.DOFade(1, m_FadeDuration).WaitForCompletion();
-
         yield return new WaitForSeconds(1f);
-
-        yield return m_IntroPanel.DOFade(0, m_FadeDuration).WaitForCompletion();
 
         StartCoroutine(LoginControl());
     }
@@ -420,20 +414,20 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
         */
 
         //프로 자동선택
-        SelectProData defaultPro = new SelectProData();
-        defaultPro.uid = 1001;
-        defaultPro.infoData = GolfProDataManager.Instance.GetProInfoData(defaultPro.uid);
-        yield return null;
-        defaultPro.videoData = GolfProDataManager.Instance.GetProVideoDataList(defaultPro.uid);
-        yield return null;
-        defaultPro.imageData = GolfProDataManager.Instance.GetProImageDataList(defaultPro.uid);
-        yield return null;
-        defaultPro.swingData = GolfProDataManager.Instance.GetSwingData(defaultPro.uid);
-        yield return null;
-        defaultPro.aiSwingData = GolfProDataManager.Instance.GetAISwingData(defaultPro.uid);
+        // SelectProData defaultPro = new SelectProData();
+        // defaultPro.uid = 1001;
+        // defaultPro.infoData = GolfProDataManager.Instance.GetProInfoData(defaultPro.uid);
+        // yield return null;
+        // defaultPro.videoData = GolfProDataManager.Instance.GetProVideoDataList(defaultPro.uid);
+        // yield return null;
+        // defaultPro.imageData = GolfProDataManager.Instance.GetProImageDataList(defaultPro.uid);
+        // yield return null;
+        // defaultPro.swingData = GolfProDataManager.Instance.GetSwingData(defaultPro.uid);
+        // yield return null;
+        // defaultPro.aiSwingData = GolfProDataManager.Instance.GetAISwingData(defaultPro.uid);
         yield return null;
 
-        GolfProDataManager.Instance.SelectProData = defaultPro;
+        //GolfProDataManager.Instance.SelectProData = defaultPro;
 
         GameManager.Instance.SelectedSceneName = "ModeSelect";
         SceneManager.LoadScene("ModeSelect");
@@ -442,6 +436,32 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
     public void OnClick_TouchLoginTemp()
     {
         LoginSuccess();
+    }
+
+    public void OnClick_TimeOK()
+    {
+        SetTimePanel(false);
+        StartCoroutine(TranstionToIntro());
+    }
+
+    public void OnClick_TimeBack()
+    {
+        SetTimePanel(false);
+    }
+
+    private void ShowTimePanel()
+    {
+        SetTimePanel(true);
+    }
+
+    private void SetTimePanel(bool active)
+    {
+        if (timePanel == null)
+        {
+            return;
+        }
+
+        timePanel.SetActive(active);
     }
 
     public void OnClick_Jump()
@@ -457,16 +477,11 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
             GameManager.Instance.IsTutorial = false;
 
             m_LoginPanel.interactable = true;
-            m_SpoexModePanel.interactable = false;
         }
         else
         {
             GameManager.Instance.IsTutorial = true;
-
-            m_TutorialController.StartTutorial();
         }
-
-        m_SpoexModePanel.DOFade(0, 0.5f).SetEase(Ease.OutCubic);
     }
 
     private void OnDestroy()

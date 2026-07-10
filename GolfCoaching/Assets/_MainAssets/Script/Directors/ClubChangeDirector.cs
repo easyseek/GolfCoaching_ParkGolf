@@ -7,8 +7,6 @@ using DG.Tweening;
 
 public class ClubChangeDirector : MonoBehaviour
 {
-    public TutorialController m_TutorialController;
-
     [SerializeField] private RectTransform m_ContainerRect;
 
     [SerializeField] private Button btnConfirm;
@@ -55,7 +53,7 @@ public class ClubChangeDirector : MonoBehaviour
 
         if(GameManager.Instance.IsTutorial)
         {
-            m_TutorialController.StartTutorial();
+            
         }
     }
 

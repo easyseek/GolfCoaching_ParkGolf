@@ -13,8 +13,6 @@ using System.Linq;
 
 public class ProSelectDirector : MonoBehaviour
 {
-    public TutorialController m_TutorialController;
-
     private CardPageControl<ProCardController, ProInfoData> cardPage;
 
     private FilterHandler<EStance> m_PoseFilterHandler;
@@ -107,9 +105,6 @@ public class ProSelectDirector : MonoBehaviour
         UpdateFilteredPro();
 
         cardPage.SetData(m_FilteredPro.Values.ToList());
-
-        if (GameManager.Instance.IsTutorial)
-            m_TutorialController.StartTutorial();
     }
 
     private void Init()
