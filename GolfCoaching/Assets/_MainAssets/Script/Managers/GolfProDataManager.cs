@@ -254,8 +254,6 @@ public class GolfProDataManager : MonoBehaviourSingleton<GolfProDataManager>
     private Dictionary<int, ProLandmarkData> proLandmarkDataDic = null;
     private Dictionary<int, ProLandmarkData> proAILandmarkDataDic = null;
 
-    [SerializeField] private float minLoadTime = 2.0f;
-
     private static readonly SWINGSTEP[] StepsFull =
     {
         SWINGSTEP.ADDRESS,
@@ -293,7 +291,8 @@ public class GolfProDataManager : MonoBehaviourSingleton<GolfProDataManager>
 
     private IEnumerator LoadData()
     {
-        float startTime = Time.time;
+        const float minimumLoadingTime = 2.0f;
+        float loadingStartedAt = Time.realtimeSinceStartup;
 
         bool bProTable = LoadProTable();
         bool bProInfoTable = LoadProInfoData();
@@ -304,15 +303,19 @@ public class GolfProDataManager : MonoBehaviourSingleton<GolfProDataManager>
         bool bProLandmarkTable = LoadProLandmarkData(false);
         //bool bProAILandmarkTable = LoadProLandmarkData(true);
 
-        yield return new WaitUntil(() => (
-            bProTable && bProInfoTable && bProVideoTable && bProImageTable &&
-            bProSwingTable && bProAISwingTable &&
-            bProLandmarkTable /*&& bProAILandmarkTable*/));
+        bool isLoaded = bProTable && bProInfoTable && bProVideoTable && bProImageTable &&
+            bProSwingTable && bProAISwingTable && bProLandmarkTable;
 
-        float timePassed = Time.time - startTime;
-        if (timePassed < minLoadTime)
+        if (!isLoaded)
         {
-            yield return new WaitForSeconds(minLoadTime - timePassed);
+            Debug.Log("프로 데이터 로딩에 실패했습니다.");
+            yield break;
+        }
+
+        float remainingLoadingTime = minimumLoadingTime - (Time.realtimeSinceStartup - loadingStartedAt);
+        if (remainingLoadingTime > 0f)
+        {
+            yield return new WaitForSecondsRealtime(remainingLoadingTime);
         }
 
         GameManager.Instance.SelectedSceneName = "Login";
@@ -631,7 +634,7 @@ public class GolfProDataManager : MonoBehaviourSingleton<GolfProDataManager>
                 ProLandmarkData landmarkData = new ProLandmarkData();
                 landmarkData.uid = list.uid;
 
-                // DataBase/ProSwing/{uid}/landmark/
+                // DataBase_park/ProSwing/{uid}/landmark/
                 string landmarkFolderName = isAISwing ? "landmark_ai" : "landmark";
                 string landmarkDir = $"{INI.proSwingPath}{list.uid}/{landmarkFolderName}/";
 
@@ -870,7 +873,7 @@ public class GolfProDataManager : MonoBehaviourSingleton<GolfProDataManager>
         {
             string homePath = Path.Combine(homeDir, INI.proSwingPath);
 
-            if (Directory.Exists(homePath) || INI.proSwingPath.StartsWith("DataBase"))
+            if (Directory.Exists(homePath) || INI.proSwingPath.StartsWith("DataBase_park"))
             {
                 rootBasePath = homePath;
             }

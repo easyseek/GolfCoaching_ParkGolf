@@ -391,10 +391,10 @@ public class RecordingDirector : MonoBehaviour
     {
         string homeDir = System.Environment.GetEnvironmentVariable("HOME");
 
-        path = Path.Combine(homeDir, "DataBase", "ProSwing", GolfProDataManager.Instance.SelectProData.uid.ToString());
+        path = Path.Combine(homeDir, "DataBase_park", "ProSwing", GolfProDataManager.Instance.SelectProData.uid.ToString());
         landmarkPath = Path.Combine(path, "landmark");
 
-        string videoDir = Path.Combine(homeDir, "DataBase", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString());
+        string videoDir = Path.Combine(homeDir, "DataBase_park", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString());
 
         if (!Directory.Exists(videoDir))
         {
@@ -408,15 +408,15 @@ public class RecordingDirector : MonoBehaviour
         string tempBaseName = Path.GetFileNameWithoutExtension(_pendingVideoFinalPath);
         _pendingVideoTempPath = Path.Combine(videoDir, tempBaseName + ".tmp.mp4");
 
-        videoCSVPath = Path.Combine(homeDir, "DataBase", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"{GolfProDataManager.Instance.SelectProData.uid}.csv");
+        videoCSVPath = Path.Combine(homeDir, "DataBase_park", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"{GolfProDataManager.Instance.SelectProData.uid}.csv");
 
-        imagePath = Path.Combine(homeDir, "DataBase", "ProImage", GolfProDataManager.Instance.SelectProData.uid.ToString());
+        imagePath = Path.Combine(homeDir, "DataBase_park", "ProImage", GolfProDataManager.Instance.SelectProData.uid.ToString());
 
-        profileFrontPath = Path.Combine(homeDir, "DataBase", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"front_video_{(int)swingType}{(int)club}.mp4");
-        profileSidePath = Path.Combine(homeDir, "DataBase", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"side_video_{(int)swingType}{(int)club}.mp4");
+        profileFrontPath = Path.Combine(homeDir, "DataBase_park", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"front_video_{(int)swingType}{(int)club}.mp4");
+        profileSidePath = Path.Combine(homeDir, "DataBase_park", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"side_video_{(int)swingType}{(int)club}.mp4");
 
-        _profileFrontTempPath = Path.Combine(homeDir, "DataBase", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"front_video_{(int)swingType}{(int)club}_temp.mp4");
-        _profileSideTempPath = Path.Combine(homeDir, "DataBase", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"side_video_{(int)swingType}{(int)club}_temp.mp4");
+        _profileFrontTempPath = Path.Combine(homeDir, "DataBase_park", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"front_video_{(int)swingType}{(int)club}_temp.mp4");
+        _profileSideTempPath = Path.Combine(homeDir, "DataBase_park", "ProVideo", GolfProDataManager.Instance.SelectProData.uid.ToString(), $"side_video_{(int)swingType}{(int)club}_temp.mp4");
 
         ffmpegPath = Path.Combine(Application.dataPath, "Plugins", "ffmpeg", "bin", "ffmpeg");
 

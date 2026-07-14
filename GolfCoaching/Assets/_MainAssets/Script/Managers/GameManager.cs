@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     public IEnumerator LoadImageCoroutine(string imageName, Action<Sprite> onLoaded)
     {
-        string filePath /*= Path.Combine(Application.dataPath, "DataBase", "ProImage", imageName)*/;
+        string filePath /*= Path.Combine(Application.dataPath, "DataBase_park", "ProImage", imageName)*/;
 
 #if UNITY_STANDALONE_LINUX
         string homeDir = System.Environment.GetEnvironmentVariable("HOME");
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         if (!File.Exists(filePath))
         {
             filePath = $"{Application.streamingAssetsPath}/{imageName}.png";
-            //filePath = Path.Combine(Application.streamingAssetsPath, "DataBase", "ProImage", imagename);
+            //filePath = Path.Combine(Application.streamingAssetsPath, "DataBase_park", "ProImage", imagename);
         }
 
         if(!File.Exists(filePath))
@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     public string LoadVideoURL(string videoName)
     {
-        string filePath /*= Path.Combine(Application.dataPath, "DataBase", "ProVideo", videoName)*/;
+        string filePath /*= Path.Combine(Application.dataPath, "DataBase_park", "ProVideo", videoName)*/;
 
         filePath = $"{Application.dataPath}/{videoName}";
 #if UNITY_STANDALONE_LINUX
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         if (!File.Exists(filePath))
         {
             filePath = $"{Application.streamingAssetsPath}/{videoName}";
-            //filePath = Path.Combine(Application.streamingAssetsPath, "DataBase", "ProVideo", videoName);
+            //filePath = Path.Combine(Application.streamingAssetsPath, "DataBase_park", "ProVideo", videoName);
         }
 
         if (!File.Exists(filePath))

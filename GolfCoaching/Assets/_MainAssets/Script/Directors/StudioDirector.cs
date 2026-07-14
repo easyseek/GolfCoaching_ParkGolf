@@ -378,7 +378,7 @@ public class StudioDirector : MonoBehaviour
 
         int uid = GolfProDataManager.Instance.SelectProData.uid;
         string homeDir = System.Environment.GetEnvironmentVariable("HOME");
-        string proVideoDir = Path.Combine(homeDir, "DataBase", "ProVideo", uid.ToString());
+        string proVideoDir = Path.Combine(homeDir, "DataBase_park", "ProVideo", uid.ToString());
         string frontPath = Path.Combine(proVideoDir, $"front_video_{(int)swingType}{(int)club}.mp4");
         string sidePath = Path.Combine(proVideoDir, $"side_video_{(int)swingType}{(int)club}.mp4");
 

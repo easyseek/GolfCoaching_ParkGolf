@@ -56,8 +56,6 @@ public class BootDirector : MonoBehaviour
         }
         */
 
-        yield return new WaitForSeconds(3f);
-
         Init();
     }
 
@@ -109,11 +107,7 @@ public class BootDirector : MonoBehaviour
 #endif
         Utillity.Instance.SetResolution(width, height);
 
-        //프로 데이터 로드 임시 스킵
-        //GolfProDataManager.Instance.LoadProData();
-
-        GameManager.Instance.SelectedSceneName = "Login";
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Login");
+        GolfProDataManager.Instance.LoadProData();
     }
 
     private void OnApplicationQuit()

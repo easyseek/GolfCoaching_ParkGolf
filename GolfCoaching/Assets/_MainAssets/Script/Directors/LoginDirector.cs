@@ -413,21 +413,18 @@ public class LoginDirector : MonoBehaviour//SerializedMonoBehaviour, ISerializat
         SceneManager.LoadScene("ProSelect");
         */
 
-        //프로 자동선택
-        // SelectProData defaultPro = new SelectProData();
-        // defaultPro.uid = 1001;
-        // defaultPro.infoData = GolfProDataManager.Instance.GetProInfoData(defaultPro.uid);
-        // yield return null;
-        // defaultPro.videoData = GolfProDataManager.Instance.GetProVideoDataList(defaultPro.uid);
-        // yield return null;
-        // defaultPro.imageData = GolfProDataManager.Instance.GetProImageDataList(defaultPro.uid);
-        // yield return null;
-        // defaultPro.swingData = GolfProDataManager.Instance.GetSwingData(defaultPro.uid);
-        // yield return null;
-        // defaultPro.aiSwingData = GolfProDataManager.Instance.GetAISwingData(defaultPro.uid);
-        yield return null;
+        // 파크골프는 프로 선택 없이 UID 1001을 기본 프로로 사용한다.
+        SelectProData defaultPro = new SelectProData();
+        defaultPro.uid = 1001;
+        defaultPro.infoData = GolfProDataManager.Instance.GetProInfoData(defaultPro.uid);
+        defaultPro.videoData = GolfProDataManager.Instance.GetProVideoDataList(defaultPro.uid);
+        defaultPro.imageData = GolfProDataManager.Instance.GetProImageDataList(defaultPro.uid);
+        defaultPro.swingData = GolfProDataManager.Instance.GetSwingData(defaultPro.uid);
+        defaultPro.aiSwingData = GolfProDataManager.Instance.GetAISwingData(defaultPro.uid);
+        defaultPro.landmarkData = GolfProDataManager.Instance.GetLandmarkData(defaultPro.uid);
 
-        //GolfProDataManager.Instance.SelectProData = defaultPro;
+        GolfProDataManager.Instance.SelectProData = defaultPro;
+        yield return null;
 
         GameManager.Instance.SelectedSceneName = "ModeSelect";
         SceneManager.LoadScene("ModeSelect");

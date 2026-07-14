@@ -15,11 +15,11 @@ public static class INI
     public static string Grey500 = "#5E6778";
     public static string Grey600 = "#41485A";
 
-    public static string proDataPath = "DataBase/ProData";
-    public static string proInfoPath = "DataBase/ProInfo/";
-    public static string proVideoPath = "DataBase/ProVideo/";
-    public static string proImagePath = "DataBase/ProImage/";
-    public static string proSwingPath = "DataBase/ProSwing/";
+    public static string proDataPath = "DataBase_park/ProData";
+    public static string proInfoPath = "DataBase_park/ProInfo/";
+    public static string proVideoPath = "DataBase_park/ProVideo/";
+    public static string proImagePath = "DataBase_park/ProImage/";
+    public static string proSwingPath = "DataBase_park/ProSwing/";
 
     public static float PlaySpeedNormal = 0.85f;
     public static float PlaySpeedSlow = 0.5f;

@@ -365,7 +365,7 @@ public class AICoachingDirector : MonoBehaviour
         //aiSwingStepData = GolfProDataManager.Instance.SelectProData.aiSwingData.dicFull[EClub.MiddleIron];
         //swingStepData = GolfProDataManager.Instance.SelectProData.swingData.dicFull[EClub.MiddleIron];
 
-        string imagePath = Path.Combine(homeDir, "DataBase", "ProImage", $"{GolfProDataManager.Instance.SelectProData.uid}");
+        string imagePath = Path.Combine(homeDir, "DataBase_park", "ProImage", $"{GolfProDataManager.Instance.SelectProData.uid}");
 
         for (int i = 0; i < 8; i++)
         {
@@ -4194,7 +4194,7 @@ public class AICoachingDirector : MonoBehaviour
         string homeDir = System.Environment.GetEnvironmentVariable("HOME");
         int uid = GolfProDataManager.Instance.SelectProData.uid;
 
-        string proSwingDir = Path.Combine(homeDir, "DataBase", "ProSwing", uid.ToString());
+        string proSwingDir = Path.Combine(homeDir, "DataBase_park", "ProSwing", uid.ToString());
         string fileName = $"{(int)ESwingType.Full}_{(int)EClub.MiddleIron}_ai_frames.csv";
 
         return Path.Combine(proSwingDir, fileName);

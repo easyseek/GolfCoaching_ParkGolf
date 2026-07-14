@@ -11476,7 +11476,7 @@ MonoBehaviour:
   m_FadeDuration: 0.3
   txtVer: {fileID: 970047191}
   qrLoginImage: {fileID: 1601317617}
-  timePanel: {fileID: 0}
+  timePanel: {fileID: 1094252388}
   requestQrOnStart: 1
 --- !u!1 &2103461665
 GameObject:

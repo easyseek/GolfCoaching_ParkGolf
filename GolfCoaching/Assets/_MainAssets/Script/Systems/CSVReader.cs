@@ -23,7 +23,7 @@ public class CSVReader
         //filePath = $"{Application.dataPath}/{file}.csv";
 
         //home
-        if (!Path.IsPathRooted(file) && file.StartsWith("DataBase"))
+        if (!Path.IsPathRooted(file) && file.StartsWith("DataBase_park"))
         {
             string homeDir = System.Environment.GetEnvironmentVariable("HOME");
             string hDrivePath = Path.Combine(homeDir,file + ".csv");
@@ -35,7 +35,7 @@ public class CSVReader
         }
 
         // C
-        if (!Path.IsPathRooted(file) && file.StartsWith("DataBase"))
+        if (!Path.IsPathRooted(file) && file.StartsWith("DataBase_park"))
         {
             string cDrivePath = Path.Combine(@"C:\", file + ".csv");
             if (File.Exists(cDrivePath))
