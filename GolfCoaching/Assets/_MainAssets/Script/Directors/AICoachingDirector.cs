@@ -271,6 +271,12 @@ public class AICoachingDirector : MonoBehaviour
     private int heightFront;
     private int widthSide;
     private int heightSide;
+    private Coroutine totalUserSwingCoroutine;
+    private Texture2D totalUserFrontTexture;
+    private Texture2D totalUserSideTexture;
+    private byte[] totalUserFrontRotatedFrame;
+    private byte[] totalUserSideRotatedFrame;
+    private float totalUserPlaybackSpeed = 1.0f;
     private int curStepNum = 0;
 
     private float _lastHandDir;
@@ -859,7 +865,7 @@ public class AICoachingDirector : MonoBehaviour
         }
 
         m_TotalProgressImg.fillAmount = 0f;
-        m_MatchingRateText.text = "0%";
+        m_MatchingRateText.text = "0<size=65%>%</size>";
 
         m_TotalProgressImg.DOFillAmount(currentRatio, 1.0f)
             .SetEase(Ease.OutQuad)
@@ -868,11 +874,11 @@ public class AICoachingDirector : MonoBehaviour
 
         currentRateTween = DOTween.To(() => 0, value =>
         {
-            m_MatchingRateText.text = $"{value}%";
+            m_MatchingRateText.text = $"{value}<size=65%>%</size>";
         }, currentPercent, 1.0f)
             .SetEase(Ease.OutQuad)
             .SetUpdate(true)
-            .OnComplete(() => m_MatchingRateText.text = $"{currentPercent}%");
+            .OnComplete(() => m_MatchingRateText.text = $"{currentPercent}<size=65%>%</size>");
 
         Debug.Log($"[AICoaching][TotalTop] targetScore={currentPercent}");
     }
@@ -1218,6 +1224,17 @@ public class AICoachingDirector : MonoBehaviour
         }
     }
 
+    private Color GetResultScoreColor(int score)
+    {
+        return score >= 80
+            ? Utillity.Instance.HexToRGB(INI.Mint)
+            : score >= 50
+                ? Color.white
+                : score >= 30
+                    ? Utillity.Instance.HexToRGB(INI.Yellow)
+                    : Utillity.Instance.HexToRGB(INI.Red2);
+    }
+
     public void AnimateTotalGraph(List<int> targetScore, List<int> avgScore, float duration = 0.5f)
     {
         EnsureTotalStepGaugeLayout();
@@ -1262,13 +1279,7 @@ public class AICoachingDirector : MonoBehaviour
             Image progressImg = m_TotalStepProgressImgs[index];
             TextMeshProUGUI scoreText = m_TotalStepScoreTexts[index];
 
-            Color scoreColor = score >= 80
-                ? Utillity.Instance.HexToRGB(INI.Mint)
-                : score >= 50
-                    ? Color.white
-                    : score >= 30
-                        ? Utillity.Instance.HexToRGB(INI.Yellow)
-                        : Utillity.Instance.HexToRGB(INI.Red2);
+            Color scoreColor = GetResultScoreColor(score);
 
             progressImg.color = scoreColor;
             scoreText.color = scoreColor;
@@ -1284,7 +1295,7 @@ public class AICoachingDirector : MonoBehaviour
             gaugeRect.DOKill();
             gaugeRect.sizeDelta = new Vector2(gaugeRect.sizeDelta.x, 0f);
             gaugeRect.anchoredPosition = new Vector2(fullPosition.x, bottomY);
-            scoreText.text = "0%";
+            scoreText.text = "0<size=65%>%</size>";
 
             gaugeRect.DOSizeDelta(new Vector2(gaugeRect.sizeDelta.x, targetHeight), duration)
                 .SetEase(Ease.OutQuad)
@@ -1301,7 +1312,7 @@ public class AICoachingDirector : MonoBehaviour
 
             DOTween.To(() => 0, value =>
             {
-                scoreText.text = $"{value}%";
+                scoreText.text = $"{value}<size=65%>%</size>";
             }, score, duration)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true);
@@ -1395,7 +1406,9 @@ public class AICoachingDirector : MonoBehaviour
             }
 
             if (m_DotTexts != null && j < m_DotTexts.Length)
-                m_DotTexts[j].text = $"{rate}%";
+            {
+                m_DotTexts[j].text = $"{rate}<size=65%>%</size>";
+            }
 
             drawPoints.Add(new Vector2(rt.anchoredPosition.x, y));
         }
@@ -1413,6 +1426,9 @@ public class AICoachingDirector : MonoBehaviour
     {
         m_CurPoseScoreText.text = $"0<size=60%>%</size>";
 
+        Color scoreColor = GetResultScoreColor(value);
+
+        m_PoseProgressImg.color = scoreColor;
         m_PoseProgressImg.fillAmount = 0f;
         m_PoseProgressImg.DOKill();
         m_PoseProgressImg.DOFillAmount(value / 100f, duration).SetEase(Ease.OutQuad);
@@ -1596,8 +1612,8 @@ public class AICoachingDirector : MonoBehaviour
         {
             m_RealProFrontVideo.targetDisplay = m_FrontProRealRaw;
             m_RealProSideVideo.targetDisplay = m_SideProRealRaw;
-            m_RealUserFrontVideo.targetDisplay = m_FrontUserRealRaw;
-            m_RealUserSideVideo.targetDisplay = m_SideUserRealRaw;
+            m_RealUserFrontVideo.targetDisplay = null;
+            m_RealUserSideVideo.targetDisplay = null;
 
             m_RealProFrontVideo.started -= OnTotalFrontVideoStarted;
             m_RealProSideVideo.started -= OnTotalSideVideoStarted;
@@ -1610,8 +1626,7 @@ public class AICoachingDirector : MonoBehaviour
             m_FrontProRealRaw.color = Color.black;
             m_SideProRealRaw.color = Color.black;
 
-            m_RealUserFrontVideo.StopAndRewind();
-            m_RealUserSideVideo.StopAndRewind();
+            StartTotalUserSwingPlayback();
         }
         else
         {
@@ -1636,6 +1651,118 @@ public class AICoachingDirector : MonoBehaviour
         }
     }
 
+    private void StartTotalUserSwingPlayback()
+    {
+        StopTotalUserSwingPlayback();
+        totalUserSwingCoroutine = StartCoroutine(PlayTotalUserSwing());
+    }
+
+    private void StopTotalUserSwingPlayback()
+    {
+        if (totalUserSwingCoroutine != null)
+        {
+            StopCoroutine(totalUserSwingCoroutine);
+            totalUserSwingCoroutine = null;
+        }
+    }
+
+    private IEnumerator PlayTotalUserSwing()
+    {
+        int frameIndex = 0;
+
+        while (_isTotalAnalyze)
+        {
+            if (framesFront.Count <= 0)
+            {
+                totalUserSwingCoroutine = null;
+                yield break;
+            }
+
+            byte[] frontFrame = framesFront[frameIndex];
+
+            if (frontFrame != null && frontFrame.Length > 0)
+            {
+                RotateRgb24Clockwise(frontFrame, widthFront, heightFront, ref totalUserFrontRotatedFrame);
+
+                if (totalUserFrontTexture == null || totalUserFrontTexture.width != heightFront || totalUserFrontTexture.height != widthFront)
+                {
+                    if (totalUserFrontTexture != null)
+                    {
+                        Destroy(totalUserFrontTexture);
+                    }
+
+                    totalUserFrontTexture = new Texture2D(heightFront, widthFront, TextureFormat.RGB24, false);
+                    m_FrontUserRealRaw.texture = totalUserFrontTexture;
+                }
+
+                totalUserFrontTexture.LoadRawTextureData(totalUserFrontRotatedFrame);
+                totalUserFrontTexture.Apply(false, false);
+                m_FrontUserRealRaw.color = Color.white;
+            }
+
+            if (frameIndex < framesSide.Count)
+            {
+                byte[] sideFrame = framesSide[frameIndex];
+
+                if (sideFrame != null && sideFrame.Length > 0)
+                {
+                    RotateRgb24Clockwise(sideFrame, widthSide, heightSide, ref totalUserSideRotatedFrame);
+
+                    if (totalUserSideTexture == null || totalUserSideTexture.width != heightSide || totalUserSideTexture.height != widthSide)
+                    {
+                        if (totalUserSideTexture != null)
+                        {
+                            Destroy(totalUserSideTexture);
+                        }
+
+                        totalUserSideTexture = new Texture2D(heightSide, widthSide, TextureFormat.RGB24, false);
+                        m_SideUserRealRaw.texture = totalUserSideTexture;
+                    }
+
+                    totalUserSideTexture.LoadRawTextureData(totalUserSideRotatedFrame);
+                    totalUserSideTexture.Apply(false, false);
+                    m_SideUserRealRaw.color = Color.white;
+                }
+            }
+
+            frameIndex++;
+
+            if (frameIndex >= framesFront.Count)
+            {
+                frameIndex = 0;
+            }
+
+            yield return new WaitForSecondsRealtime(1.0f / (30.0f * totalUserPlaybackSpeed));
+        }
+
+        totalUserSwingCoroutine = null;
+    }
+
+    private void RotateRgb24Clockwise(byte[] source, int sourceWidth, int sourceHeight, ref byte[] output)
+    {
+        if (output == null || output.Length != source.Length)
+        {
+            output = new byte[source.Length];
+        }
+
+        int destinationWidth = sourceHeight;
+
+        for (int sourceY = 0; sourceY < sourceHeight; sourceY++)
+        {
+            for (int sourceX = 0; sourceX < sourceWidth; sourceX++)
+            {
+                int destinationX = sourceHeight - 1 - sourceY;
+                int destinationY = sourceX;
+                int sourceIndex = (sourceY * sourceWidth + sourceX) * 3;
+                int destinationIndex = (destinationY * destinationWidth + destinationX) * 3;
+
+                output[destinationIndex] = source[sourceIndex];
+                output[destinationIndex + 1] = source[sourceIndex + 1];
+                output[destinationIndex + 2] = source[sourceIndex + 2];
+            }
+        }
+    }
+
     private void ResetTotalSwingVideos()
     {
         m_RealProFrontVideo.started -= OnTotalFrontVideoStarted;
@@ -1645,6 +1772,7 @@ public class AICoachingDirector : MonoBehaviour
         m_RealProSideVideo.StopAndRewind();
         m_RealUserFrontVideo.StopAndRewind();
         m_RealUserSideVideo.StopAndRewind();
+        StopTotalUserSwingPlayback();
 
         m_FrontProRealRaw.color = Color.black;
         m_SideProRealRaw.color = Color.black;
@@ -1902,6 +2030,7 @@ public class AICoachingDirector : MonoBehaviour
         m_RealProSideVideo.playbackSpeed = speed;
         m_RealUserFrontVideo.playbackSpeed = speed;
         m_RealUserSideVideo.playbackSpeed = speed;
+        totalUserPlaybackSpeed = speed;
     }
 
     private void TrimBeforeTakeback()
@@ -5005,6 +5134,20 @@ public class AICoachingDirector : MonoBehaviour
 
     private void OnDestroy()
     {
+        StopTotalUserSwingPlayback();
+
+        if (totalUserFrontTexture != null)
+        {
+            Destroy(totalUserFrontTexture);
+            totalUserFrontTexture = null;
+        }
+
+        if (totalUserSideTexture != null)
+        {
+            Destroy(totalUserSideTexture);
+            totalUserSideTexture = null;
+        }
+
         if (_tfAnalyzer != null)
         {
             _tfAnalyzer.Dispose();
