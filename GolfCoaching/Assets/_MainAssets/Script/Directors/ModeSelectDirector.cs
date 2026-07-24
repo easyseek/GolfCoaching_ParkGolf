@@ -7,6 +7,7 @@ public class ModeSelectDirector : MonoBehaviour
     private const string SceneLesson = "LessonMode";
     private const string ScenePractice = "Mirror";
     private const string SceneAISwing = "AICoaching";
+    private const string SceneStudio = "Studio";
 
     private void Update()
     {
@@ -34,6 +35,11 @@ public class ModeSelectDirector : MonoBehaviour
     public void OnClick_AISwing()
     {
         LoadScene(SceneAISwing);
+    }
+
+    public void OnClick_Studio()
+    {
+        LoadScene(SceneStudio);
     }
 
     private void LoadScene(string sceneName)

@@ -6,10 +6,12 @@ public static class INI
 {
     public static bool isInit = false;
 
+    public static string Mint = "#18F5F4";
     public static string Green500 = "#28D28B";
     public static string Green600 = "#1FC17D";
     public static string Green700 = "#0DA56B";
     public static string Red = "#FF516E";
+    public static string Red2 = "#FF8284";
     public static string Yellow = "#FFF500";
     public static string Grey300 = "#8E96A5";
     public static string Grey500 = "#5E6778";

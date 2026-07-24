@@ -50,12 +50,18 @@ public class AICoachingDirector : MonoBehaviour
     [SerializeField] private GameObject m_Lesson;
     [SerializeField] private GameObject m_AnalyzeTotal;
     [SerializeField] private GameObject m_AnalyzePose;
+    [SerializeField] private GameObject m_TotalTop;
+    [SerializeField] private GameObject m_TotalStepGauge;
+    [SerializeField] private GameObject m_StepTop;
     [SerializeField] private GameObject[] m_DotObjects;
     [SerializeField] private GameObject m_DirToggleCover;
     [SerializeField] private GameObject[] m_Models;
+    [SerializeField] private GameObject m_TotalRealPro, m_TotalRealUser;
+    [SerializeField] private GameObject m_PoseRealPro, m_PoseRealUser;
 
     [SerializeField] private RectTransform m_FrontProView, m_SideProView, m_FrontUserView, m_SideUserView;
     [SerializeField] private RectTransform m_FrontProReal, m_SideProReal, m_FrontUserReal, m_SideUserReal;
+    [SerializeField] private RectTransform m_PoseFrontProReal, m_PoseSideProReal, m_PoseFrontUserReal, m_PoseSideUserReal;
     [SerializeField] private RectTransform m_BeforeRateBar;
     [SerializeField] private RectTransform m_CurrentRateBar;
     [SerializeField] private RectTransform m_DetailAnalyzePanel;
@@ -63,6 +69,7 @@ public class AICoachingDirector : MonoBehaviour
     [SerializeField] private RawImage[] m_ProThumbnailImgs;
     [SerializeField] private RawImage[] m_UserThumbnailImgs;
     [SerializeField] private RawImage m_FrontProRealRaw, m_SideProRealRaw, m_FrontUserRealRaw, m_SideUserRealRaw;
+    [SerializeField] private RawImage m_PoseFrontProRealRaw, m_PoseSideProRealRaw, m_PoseFrontUserRealRaw, m_PoseSideUserRealRaw;
 
     [SerializeField] private ToggleGroup m_ResultMainTG;
     [SerializeField] private ToggleGroup m_ResultPoseTG;
@@ -98,6 +105,9 @@ public class AICoachingDirector : MonoBehaviour
     [SerializeField] private Graphic avgFillGraphic;
 
     [SerializeField] private Image m_PoseProgressImg;
+    [SerializeField] private Image m_TotalProgressImg;
+    [SerializeField] private Image[] m_TotalStepProgressImgs;
+    [SerializeField] private TextMeshProUGUI[] m_TotalStepScoreTexts;
 
     [SerializeField] private Animator m_ProModelAni;
     [SerializeField] private Animator m_UserModelAni;
@@ -125,6 +135,8 @@ public class AICoachingDirector : MonoBehaviour
     private float[] currentAvgScore = new float[8];
     private float radius = 150.0f;
     private int pointCount = 6;
+    private float[] totalStepGaugeFullHeights;
+    private Vector2[] totalStepGaugeFullPositions;
 
     private bool _isDetailPanelOpen = false;
 
@@ -152,6 +164,10 @@ public class AICoachingDirector : MonoBehaviour
     [SerializeField] private bool debugAnalyzeLog = false;
     [SerializeField] private bool debugScoreCsv = false;
     [SerializeField] private bool useRecordingProfileFrames = false;
+
+    [Header("* RESULT TEST")]
+    [SerializeField] private bool enableResultTestButton = true;
+    [SerializeField] private KeyCode resultTestKey = KeyCode.F8;
     private bool _importedRecordingProfileFrames = false;
 
     private string debugFrameFolderName = "DebugAnalyzeFrames";
@@ -279,8 +295,8 @@ public class AICoachingDirector : MonoBehaviour
         SWINGSTEP.TAKEBACK,
         SWINGSTEP.BACKSWING,
         SWINGSTEP.DOWNSWING,
+        SWINGSTEP.IMPACT,
         SWINGSTEP.FOLLOW,
-        SWINGSTEP.FINISH
     };
 
     private PoseLandmarker offlinePoseLandmarker;
@@ -402,11 +418,6 @@ public class AICoachingDirector : MonoBehaviour
             m_ModelDirectionToggles[i].onValueChanged.AddListener(OnValueChanged_ToggleDirection);
         }
 
-        if (m_ModelChangeToggle != null)
-        {
-            m_ModelChangeToggle.onValueChanged.AddListener(OnValueChanged_ModelChange);
-        }
-
         if (m_RealVideoSpeedToggle != null)
         {
             m_RealVideoSpeedToggle.onValueChanged.AddListener(OnValueChanged_RealVideoSpeed);
@@ -415,7 +426,6 @@ public class AICoachingDirector : MonoBehaviour
         //AnimateMatchingRate(0.0f, (myScore.Sum() / (myScore.Count - 2)) * 0.01f);
         AnimateMatchingRate(0.0f, Mathf.Clamp(totalAnalyzeScore, 0, 100) * 0.01f);
         AnimateTotalGraph(myScore, avgScore, 1.1f);
-        StartCoroutine(ModelAnimation(true, m_ProModelAni, m_UserModelAni));
 
         SetReadyGrip();
     }
@@ -521,6 +531,7 @@ public class AICoachingDirector : MonoBehaviour
                             timer = 0f;
                         }
                     }
+
                     break;
 
                 case COACHINGSTEP.ADDRESS:
@@ -579,6 +590,7 @@ public class AICoachingDirector : MonoBehaviour
                             SetCoachinggStep(COACHINGSTEP.GRIP);
                         }
                     }
+
                     break;
 
                 case COACHINGSTEP.SWING:
@@ -613,6 +625,7 @@ public class AICoachingDirector : MonoBehaviour
                             SetCoachinggStep(COACHINGSTEP.SWINGEND);
                         }
                     }
+
                     break;
 
                 case COACHINGSTEP.SWINGEND:
@@ -623,6 +636,7 @@ public class AICoachingDirector : MonoBehaviour
                         SetCoachinggStep(COACHINGSTEP.ANALYZE);
                         Debug.Log("[CheckAISwing] SWINGEND -> ANALYZE");
                     }
+
                     break;
 
                 case COACHINGSTEP.ANALYZE:
@@ -654,11 +668,13 @@ public class AICoachingDirector : MonoBehaviour
                         SetCoachinggStep(COACHINGSTEP.RESULT);
                         Debug.Log("[CheckAISwing] ANALYZE -> RESULT");
                     }
+
                     break;
 
                 case COACHINGSTEP.RESULT:
                     {
                     }
+
                     break;
             }
 
@@ -678,6 +694,66 @@ public class AICoachingDirector : MonoBehaviour
         checkImpact = false;
         stepStage = SWINGSTEP.TAKEBACK;
         takebackDetectedFrameIndex = -1;
+    }
+
+    private void Update()
+    {
+        if (enableResultTestButton && Input.GetKeyDown(resultTestKey))
+        {
+            OnClick_ResultTest();
+        }
+    }
+
+    private void OnGUI()
+    {
+        if (!enableResultTestButton || PanelResult.activeSelf)
+        {
+            return;
+        }
+
+        GUIStyle style = new GUIStyle(GUI.skin.button)
+        {
+            fontSize = 26,
+            fontStyle = FontStyle.Bold
+        };
+
+        if (GUI.Button(new UnityEngine.Rect(Screen.width - 270f, 20f, 250f, 72f), "RESULT TEST (F8)", style))
+        {
+            OnClick_ResultTest();
+        }
+    }
+
+    public void OnClick_ResultTest()
+    {
+        SetResultTestScore(SWINGSTEP.ADDRESS, 92, addressTimeline);
+        SetResultTestScore(SWINGSTEP.TAKEBACK, 68, takebackTimeline);
+        SetResultTestScore(SWINGSTEP.BACKSWING, 54, backswingTimeline);
+        SetResultTestScore(SWINGSTEP.TOP, 40, topTimeline);
+        SetResultTestScore(SWINGSTEP.DOWNSWING, 42, downswingTimeline);
+        SetResultTestScore(SWINGSTEP.IMPACT, 27, impactTimeline);
+        SetResultTestScore(SWINGSTEP.FOLLOW, 83, followTimeline);
+        SetResultTestScore(SWINGSTEP.FINISH, 15, finishTimeline);
+
+        totalAnalyzeScore = 61;
+        selectStep = SWINGSTEP.ADDRESS;
+
+        Debug.Log("[AICoaching][ResultTest] Camera-free test scores applied.");
+        SetCoachinggStep(COACHINGSTEP.RESULT);
+    }
+
+    private void SetResultTestScore(SWINGSTEP step, int score, List<int> timeline)
+    {
+        score = Mathf.Clamp(score, 0, 100);
+        int index = (int)step;
+
+        while (myScore.Count <= index)
+        {
+            myScore.Add(-1);
+        }
+
+        myScore[index] = score;
+        timeline.Clear();
+        timeline.Add(score);
     }
 
     private void SetCoachinggStep(COACHINGSTEP step)
@@ -737,59 +813,68 @@ public class AICoachingDirector : MonoBehaviour
         else if (step == COACHINGSTEP.RESULT)
         {
             OnClick_Result();
-
-            SetTotalImageSetting();
-            //AnimateMatchingRate(0.0f, (myScore.Sum() / (myScore.Count - 2)) * 0.01f);
-            AnimateMatchingRate(0.0f, Mathf.Clamp(totalAnalyzeScore, 0, 100) * 0.01f);
-            AnimateTotalGraph(myScore, avgScore, 1.1f);
         }
     }
 
     private Tween beforeRateTween;
     private Tween currentRateTween;
 
+    private int GetTotalDisplayScore()
+    {
+        int fullFrameScore = Mathf.Clamp(totalAnalyzeScore, 0, 100);
+
+        if (fullFrameScore > 0)
+        {
+            return fullFrameScore;
+        }
+
+        int address = GetStepScore(addressTimeline, (int)SWINGSTEP.ADDRESS);
+        int takeback = GetStepScore(takebackTimeline, (int)SWINGSTEP.TAKEBACK);
+        int backswing = GetStepScore(backswingTimeline, (int)SWINGSTEP.BACKSWING);
+        int downswing = GetStepScore(downswingTimeline, (int)SWINGSTEP.DOWNSWING);
+        int impact = GetStepScore(impactTimeline, (int)SWINGSTEP.IMPACT);
+        int follow = GetStepScore(followTimeline, (int)SWINGSTEP.FOLLOW);
+
+        int stepAverage = Mathf.RoundToInt(
+            (address + takeback + backswing + downswing + impact + follow) / 6f);
+
+        Debug.LogWarning($"[AICoaching][TotalTop] totalAnalyzeScore is 0. " +
+            $"Using step average={stepAverage} " +
+            $"(address={address}, takeback={takeback}, backswing={backswing}, " +
+            $"downswing={downswing}, impact={impact}, follow={follow})");
+
+        return Mathf.Clamp(stepAverage, 0, 100);
+    }
+
     public void AnimateMatchingRate(float beforeRatio, float currentRatio)
     {
-        float beforeHeight = 195.0f * beforeRatio;
-        int beforePercent = Mathf.RoundToInt(beforeRatio * 100);
-
-        float currentHeight = 195.0f * currentRatio;
+        currentRatio = Mathf.Clamp01(currentRatio);
         int currentPercent = Mathf.RoundToInt(currentRatio * 100);
 
-        m_BeforeRateBar.sizeDelta = new Vector2(m_BeforeRateBar.sizeDelta.x, 0);
-        m_CurrentRateBar.sizeDelta = new Vector2(m_CurrentRateBar.sizeDelta.x, 0);
-
-        if (beforeRateTween != null && beforeRateTween.IsActive())
-        {
-            beforeRateTween.Kill();
-        }
+        m_TotalProgressImg.DOKill();
 
         if (currentRateTween != null && currentRateTween.IsActive())
         {
             currentRateTween.Kill();
         }
 
-        beforeRateTween = DOTween.To(() => m_BeforeRateBar.sizeDelta.y, y =>
-        {
-            m_BeforeRateBar.sizeDelta = new Vector2(m_BeforeRateBar.sizeDelta.x, y);
-        }, beforeHeight, 1.0f).SetEase(Ease.OutCubic);
+        m_TotalProgressImg.fillAmount = 0f;
+        m_MatchingRateText.text = "0%";
 
-        currentRateTween = DOTween.To(() => m_CurrentRateBar.sizeDelta.y, y =>
-        {
-            m_CurrentRateBar.sizeDelta = new Vector2(m_CurrentRateBar.sizeDelta.x, y);
-        }, currentHeight, 1.0f).SetEase(Ease.OutCubic);
+        m_TotalProgressImg.DOFillAmount(currentRatio, 1.0f)
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(true)
+            .OnComplete(() => m_TotalProgressImg.fillAmount = currentRatio);
 
-        m_MatchingRateText.text = $"{currentPercent}%";
-
-        DOTween.To(() => 0, x =>
+        currentRateTween = DOTween.To(() => 0, value =>
         {
-            m_BeforeBarText.text = $"{x}%";
-        }, beforePercent, 1.0f).SetEase(Ease.OutCubic);
+            m_MatchingRateText.text = $"{value}%";
+        }, currentPercent, 1.0f)
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(true)
+            .OnComplete(() => m_MatchingRateText.text = $"{currentPercent}%");
 
-        DOTween.To(() => 0, x =>
-        {
-            m_CurrentBarText.text = $"{x}%";
-        }, currentPercent, 1.0f).SetEase(Ease.OutCubic);
+        Debug.Log($"[AICoaching][TotalTop] targetScore={currentPercent}");
     }
 
     private void DrawTotalGraph(UILineRenderer renderer, float[] values)
@@ -860,8 +945,15 @@ public class AICoachingDirector : MonoBehaviour
             return;
         }
 
-        if (captureRealPoseFrontUser[stepIdx] != null) Destroy(captureRealPoseFrontUser[stepIdx]);
-        if (captureRealPoseSideUser[stepIdx] != null) Destroy(captureRealPoseSideUser[stepIdx]);
+        if (captureRealPoseFrontUser[stepIdx] != null)
+        {
+            Destroy(captureRealPoseFrontUser[stepIdx]);
+        }
+
+        if (captureRealPoseSideUser[stepIdx] != null)
+        {
+            Destroy(captureRealPoseSideUser[stepIdx]);
+        }
 
         Texture2D frontRawTex = null;
         if (framesFront != null && frameIndex >= 0 && frameIndex < framesFront.Count)
@@ -897,8 +989,15 @@ public class AICoachingDirector : MonoBehaviour
         }
         finally
         {
-            if (frontRawTex != null) Destroy(frontRawTex);
-            if (sideRawTex != null) Destroy(sideRawTex);
+            if (frontRawTex != null)
+            {
+                Destroy(frontRawTex);
+            }
+
+            if (sideRawTex != null)
+            {
+                Destroy(sideRawTex);
+            }
         }
     }
 
@@ -981,15 +1080,33 @@ public class AICoachingDirector : MonoBehaviour
 
             switch (i)
             {
-                case 0: texIndex = (int)SWINGSTEP.ADDRESS; break;
-                case 1: texIndex = (int)SWINGSTEP.TAKEBACK; break;
-                case 2: texIndex = (int)SWINGSTEP.BACKSWING; break;
-                case 3: texIndex = (int)SWINGSTEP.BACKSWING; break;
-                case 4: texIndex = (int)SWINGSTEP.DOWNSWING; break;
-                case 5: texIndex = (int)SWINGSTEP.IMPACT; break;
-                case 6: texIndex = (int)SWINGSTEP.FOLLOW; break;
-                case 7: texIndex = (int)SWINGSTEP.FINISH; break;
-                default: texIndex = -1; break;
+                case 0:
+                    texIndex = (int)SWINGSTEP.ADDRESS;
+                    break;
+                case 1:
+                    texIndex = (int)SWINGSTEP.TAKEBACK;
+                    break;
+                case 2:
+                    texIndex = (int)SWINGSTEP.BACKSWING;
+                    break;
+                case 3:
+                    texIndex = (int)SWINGSTEP.BACKSWING;
+                    break;
+                case 4:
+                    texIndex = (int)SWINGSTEP.DOWNSWING;
+                    break;
+                case 5:
+                    texIndex = (int)SWINGSTEP.IMPACT;
+                    break;
+                case 6:
+                    texIndex = (int)SWINGSTEP.FOLLOW;
+                    break;
+                case 7:
+                    texIndex = (int)SWINGSTEP.FINISH;
+                    break;
+                default:
+                    texIndex = -1;
+                    break;
             }
 
             if (texIndex >= 0 && texIndex < captureRealPoseFrontPro.Count)
@@ -1012,15 +1129,33 @@ public class AICoachingDirector : MonoBehaviour
 
             switch (i)
             {
-                case 0: score = GetStepScore(addressTimeline, (int)SWINGSTEP.ADDRESS); break;
-                case 1: score = GetStepScore(takebackTimeline, (int)SWINGSTEP.TAKEBACK); break;
-                case 2: score = GetStepScore(backswingTimeline, (int)SWINGSTEP.BACKSWING); break;
-                case 3: score = GetStepScore(topTimeline, (int)SWINGSTEP.TOP); break;
-                case 4: score = GetStepScore(downswingTimeline, (int)SWINGSTEP.DOWNSWING); break;
-                case 5: score = GetStepScore(impactTimeline, (int)SWINGSTEP.IMPACT); break;
-                case 6: score = GetStepScore(followTimeline, (int)SWINGSTEP.FOLLOW); break;
-                case 7: score = GetStepScore(finishTimeline, (int)SWINGSTEP.FINISH); break;
-                default: score = 0; break;
+                case 0:
+                    score = GetStepScore(addressTimeline, (int)SWINGSTEP.ADDRESS);
+                    break;
+                case 1:
+                    score = GetStepScore(takebackTimeline, (int)SWINGSTEP.TAKEBACK);
+                    break;
+                case 2:
+                    score = GetStepScore(backswingTimeline, (int)SWINGSTEP.BACKSWING);
+                    break;
+                case 3:
+                    score = GetStepScore(topTimeline, (int)SWINGSTEP.TOP);
+                    break;
+                case 4:
+                    score = GetStepScore(downswingTimeline, (int)SWINGSTEP.DOWNSWING);
+                    break;
+                case 5:
+                    score = GetStepScore(impactTimeline, (int)SWINGSTEP.IMPACT);
+                    break;
+                case 6:
+                    score = GetStepScore(followTimeline, (int)SWINGSTEP.FOLLOW);
+                    break;
+                case 7:
+                    score = GetStepScore(finishTimeline, (int)SWINGSTEP.FINISH);
+                    break;
+                default:
+                    score = 0;
+                    break;
             }
 
 #if UNITY_EDITOR
@@ -1060,54 +1195,114 @@ public class AICoachingDirector : MonoBehaviour
         return stepStage;
     }
 
-    public void AnimateTotalGraph(List<int> targetScore, List<int> avgScore, float duration = 0.5f)
+    private void EnsureTotalStepGaugeLayout()
     {
-        List<int> radarScores = new List<int>();
-        for (int i = 0; i < RadarOrder.Length; i++)
+        if (totalStepGaugeFullHeights != null &&
+            totalStepGaugeFullHeights.Length == m_TotalStepProgressImgs.Length)
         {
-            int idx = (int)RadarOrder[i];
-            radarScores.Add((idx >= 0 && idx < targetScore.Count) ? targetScore[idx] : 0);
+            return;
         }
 
-        for (int i = 0; i < pointCount; i++)
+        totalStepGaugeFullHeights = new float[m_TotalStepProgressImgs.Length];
+        totalStepGaugeFullPositions = new Vector2[m_TotalStepProgressImgs.Length];
+
+        for (int i = 0; i < m_TotalStepProgressImgs.Length; i++)
+        {
+            Image progressImg = m_TotalStepProgressImgs[i];
+            RectTransform gaugeRect = progressImg.rectTransform;
+
+            progressImg.type = Image.Type.Simple;
+            progressImg.preserveAspect = false;
+            totalStepGaugeFullHeights[i] = gaugeRect.sizeDelta.y;
+            totalStepGaugeFullPositions[i] = gaugeRect.anchoredPosition;
+        }
+    }
+
+    public void AnimateTotalGraph(List<int> targetScore, List<int> avgScore, float duration = 0.5f)
+    {
+        EnsureTotalStepGaugeLayout();
+
+        for (int i = 0; i < RadarOrder.Length; i++)
         {
             int index = i;
-            float start = 0f;
-            float end = radarScores[i];
+            int score;
 
-            DOTween.To(() => start, x =>
+            switch (RadarOrder[i])
             {
-                currentScore[index] = x;
+                case SWINGSTEP.ADDRESS:
+                    score = GetStepScore(addressTimeline, (int)SWINGSTEP.ADDRESS);
+                    break;
+                case SWINGSTEP.TAKEBACK:
+                    score = GetStepScore(takebackTimeline, (int)SWINGSTEP.TAKEBACK);
+                    break;
+                case SWINGSTEP.BACKSWING:
+                    score = GetStepScore(backswingTimeline, (int)SWINGSTEP.BACKSWING);
+                    break;
+                case SWINGSTEP.DOWNSWING:
+                    score = GetStepScore(downswingTimeline, (int)SWINGSTEP.DOWNSWING);
+                    break;
+                case SWINGSTEP.IMPACT:
+                    score = GetStepScore(impactTimeline, (int)SWINGSTEP.IMPACT);
+                    break;
+                case SWINGSTEP.FOLLOW:
+                    score = GetStepScore(followTimeline, (int)SWINGSTEP.FOLLOW);
+                    break;
+                default:
+                    score = 0;
+                    break;
+            }
 
-                if (index < m_MyScoreTexts.Length)
+            score = Mathf.Clamp(score, 0, 100);
+
+            if (index >= m_TotalStepProgressImgs.Length || index >= m_TotalStepScoreTexts.Length)
+            {
+                continue;
+            }
+
+            Image progressImg = m_TotalStepProgressImgs[index];
+            TextMeshProUGUI scoreText = m_TotalStepScoreTexts[index];
+
+            Color scoreColor = score >= 80
+                ? Utillity.Instance.HexToRGB(INI.Mint)
+                : score >= 50
+                    ? Color.white
+                    : score >= 30
+                        ? Utillity.Instance.HexToRGB(INI.Yellow)
+                        : Utillity.Instance.HexToRGB(INI.Red2);
+
+            progressImg.color = scoreColor;
+            scoreText.color = scoreColor;
+
+            float ratio = score * 0.01f;
+            float fullHeight = totalStepGaugeFullHeights[index];
+            Vector2 fullPosition = totalStepGaugeFullPositions[index];
+            float targetHeight = fullHeight * ratio;
+            float bottomY = fullPosition.y - fullHeight;
+            float targetY = bottomY + targetHeight;
+            RectTransform gaugeRect = progressImg.rectTransform;
+
+            gaugeRect.DOKill();
+            gaugeRect.sizeDelta = new Vector2(gaugeRect.sizeDelta.x, 0f);
+            gaugeRect.anchoredPosition = new Vector2(fullPosition.x, bottomY);
+            scoreText.text = "0%";
+
+            gaugeRect.DOSizeDelta(new Vector2(gaugeRect.sizeDelta.x, targetHeight), duration)
+                .SetEase(Ease.OutQuad)
+                .SetUpdate(true);
+
+            gaugeRect.DOAnchorPosY(targetY, duration)
+                .SetEase(Ease.OutQuad)
+                .SetUpdate(true)
+                .OnComplete(() =>
                 {
-                    m_MyScoreTexts[index].text = $"{Mathf.RoundToInt(x)}%";
-                }
+                    gaugeRect.sizeDelta = new Vector2(gaugeRect.sizeDelta.x, targetHeight);
+                    gaugeRect.anchoredPosition = new Vector2(fullPosition.x, targetY);
+                });
 
-                DrawTotalGraph(m_MyLineRenderer, currentScore);
-                FillTotalGraph(myFillGraphic, currentScore);
-
-            }, end, duration)
-            .SetEase(Ease.OutCubic)
-            .SetUpdate(true)
-            .OnComplete(() =>
+            DOTween.To(() => 0, value =>
             {
-                if (index == pointCount - 1)
-                {
-                    HighlightMaxMin();
-                }
-            });
-
-            int avg = (i < avgScore.Count) ? avgScore[i] : 0;
-
-            DOTween.To(() => start, x =>
-            {
-                currentAvgScore[index] = x;
-
-                DrawTotalGraph(m_AvgLineRenderer, currentAvgScore);
-                FillTotalGraph(avgFillGraphic, currentAvgScore);
-
-            }, avg, duration)
+                scoreText.text = $"{value}%";
+            }, score, duration)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true);
         }
@@ -1218,12 +1413,6 @@ public class AICoachingDirector : MonoBehaviour
     {
         m_CurPoseScoreText.text = $"0<size=60%>%</size>";
 
-#if UNITY_EDITOR
-        m_PoseProgressImg.color = value <= 29 ? Color.red : (value <= 79 ? Color.yellow : Color.green);
-#else
-        m_PoseProgressImg.color = value <= 29 ? Utillity.Instance.HexToRGB(INI.Red) : (value <= 79 ? Utillity.Instance.HexToRGB(INI.Yellow) : Utillity.Instance.HexToRGB(INI.Green500));
-#endif
-
         m_PoseProgressImg.fillAmount = 0f;
         m_PoseProgressImg.DOKill();
         m_PoseProgressImg.DOFillAmount(value / 100f, duration).SetEase(Ease.OutQuad);
@@ -1236,6 +1425,11 @@ public class AICoachingDirector : MonoBehaviour
 
     public void ToggleModelView(bool front, bool is3DModel)
     {
+        RectTransform frontProReal = _isTotalAnalyze ? m_FrontProReal : m_PoseFrontProReal;
+        RectTransform sideProReal = _isTotalAnalyze ? m_SideProReal : m_PoseSideProReal;
+        RectTransform frontUserReal = _isTotalAnalyze ? m_FrontUserReal : m_PoseFrontUserReal;
+        RectTransform sideUserReal = _isTotalAnalyze ? m_SideUserReal : m_PoseSideUserReal;
+		
         if (_isViewAnimating)
         {
             return;
@@ -1245,13 +1439,13 @@ public class AICoachingDirector : MonoBehaviour
         _isViewAnimating = true;
 
 
-        RectTransform toProFront = _isFrontPro ? (is3DModel ? m_SideProView : m_SideProReal) : (is3DModel ? m_FrontProView : m_FrontProReal);
-        RectTransform toProBack = _isFrontPro ? (is3DModel ? m_FrontProView : m_FrontProReal) : (is3DModel ? m_SideProView : m_SideProReal);
+        RectTransform toProFront = _isFrontPro ? (is3DModel ? m_SideProView : sideProReal) : (is3DModel ? m_FrontProView : frontProReal);
+        RectTransform toProBack = _isFrontPro ? (is3DModel ? m_FrontProView : frontProReal) : (is3DModel ? m_SideProView : sideProReal);
 
-        proFrontPos = is3DModel ? m_FrontProView.anchoredPosition : m_FrontProReal.anchoredPosition;
-        proFrontSize = is3DModel ? m_FrontProView.sizeDelta : m_FrontProReal.sizeDelta;
-        proBackPos = is3DModel ? m_SideProView.anchoredPosition : m_SideProReal.anchoredPosition;
-        proBackSize = is3DModel ? m_SideProView.sizeDelta : m_SideProReal.sizeDelta;
+        proFrontPos = is3DModel ? m_FrontProView.anchoredPosition : frontProReal.anchoredPosition;
+        proFrontSize = is3DModel ? m_FrontProView.sizeDelta : frontProReal.sizeDelta;
+        proBackPos = is3DModel ? m_SideProView.anchoredPosition : sideProReal.anchoredPosition;
+        proBackSize = is3DModel ? m_SideProView.sizeDelta : sideProReal.sizeDelta;
 
         Vector2 toProFrontPos = _isFrontPro ? proFrontPos : proBackPos;
         Vector2 toProFrontSize = _isFrontPro ? proFrontSize : proBackSize;
@@ -1272,13 +1466,13 @@ public class AICoachingDirector : MonoBehaviour
         toProBack.DOSizeDelta(toProBackSize, 0.35f).SetEase(Ease.InOutCubic);
 
 
-        RectTransform toUserFront = _isFrontUser ? (is3DModel ? m_SideUserView : m_SideUserReal) : (is3DModel ? m_FrontUserView : m_FrontUserReal);
-        RectTransform toUserBack = _isFrontUser ? (is3DModel ? m_FrontUserView : m_FrontUserReal) : (is3DModel ? m_SideUserView : m_SideUserReal);
+        RectTransform toUserFront = _isFrontUser ? (is3DModel ? m_SideUserView : sideUserReal) : (is3DModel ? m_FrontUserView : frontUserReal);
+        RectTransform toUserBack = _isFrontUser ? (is3DModel ? m_FrontUserView : frontUserReal) : (is3DModel ? m_SideUserView : sideUserReal);
 
-        userFrontPos = is3DModel ? m_FrontUserView.anchoredPosition : m_FrontUserReal.anchoredPosition;
-        userFrontSize = is3DModel ? m_FrontUserView.sizeDelta : m_FrontUserReal.sizeDelta;
-        userBackPos = is3DModel ? m_SideUserView.anchoredPosition : m_SideUserReal.anchoredPosition;
-        userBackSize = is3DModel ? m_SideUserView.sizeDelta : m_SideUserReal.sizeDelta;
+        userFrontPos = is3DModel ? m_FrontUserView.anchoredPosition : frontUserReal.anchoredPosition;
+        userFrontSize = is3DModel ? m_FrontUserView.sizeDelta : frontUserReal.sizeDelta;
+        userBackPos = is3DModel ? m_SideUserView.anchoredPosition : sideUserReal.anchoredPosition;
+        userBackSize = is3DModel ? m_SideUserView.sizeDelta : sideUserReal.sizeDelta;
 
         Vector2 toUserFrontPos = _isFrontUser ? userFrontPos : userBackPos;
         Vector2 toUserFrontSize = _isFrontUser ? userFrontSize : userBackSize;
@@ -1321,6 +1515,7 @@ public class AICoachingDirector : MonoBehaviour
                         {
                             anims[i].SetFloat("SwingValue", 0.0f);
                         }
+
                         break;
                     }
 
@@ -1339,6 +1534,7 @@ public class AICoachingDirector : MonoBehaviour
                     {
                         anims[i].SetFloat("SwingValue", 0.0f);
                     }
+
                     break;
                 }
 
@@ -1358,14 +1554,30 @@ public class AICoachingDirector : MonoBehaviour
 
                 switch (selectStep)
                 {
-                    case SWINGSTEP.ADDRESS: value = 0.0f; break;
-                    case SWINGSTEP.TAKEBACK: value = 0.23f; break;
-                    case SWINGSTEP.BACKSWING: value = 0.35f; break;
-                    case SWINGSTEP.TOP: value = 0.5f; break;
-                    case SWINGSTEP.DOWNSWING: value = 0.61f; break;
-                    case SWINGSTEP.IMPACT: value = 0.661f; break;
-                    case SWINGSTEP.FOLLOW: value = 0.76f; break;
-                    case SWINGSTEP.FINISH: value = 0.99f; break;
+                    case SWINGSTEP.ADDRESS:
+                        value = 0.0f;
+                        break;
+                    case SWINGSTEP.TAKEBACK:
+                        value = 0.23f;
+                        break;
+                    case SWINGSTEP.BACKSWING:
+                        value = 0.35f;
+                        break;
+                    case SWINGSTEP.TOP:
+                        value = 0.5f;
+                        break;
+                    case SWINGSTEP.DOWNSWING:
+                        value = 0.61f;
+                        break;
+                    case SWINGSTEP.IMPACT:
+                        value = 0.661f;
+                        break;
+                    case SWINGSTEP.FOLLOW:
+                        value = 0.76f;
+                        break;
+                    case SWINGSTEP.FINISH:
+                        value = 0.99f;
+                        break;
                 }
 
                 for (int i = 0; i < anims.Length; i++)
@@ -1387,18 +1599,23 @@ public class AICoachingDirector : MonoBehaviour
             m_RealUserFrontVideo.targetDisplay = m_FrontUserRealRaw;
             m_RealUserSideVideo.targetDisplay = m_SideUserRealRaw;
 
+            m_RealProFrontVideo.started -= OnTotalFrontVideoStarted;
+            m_RealProSideVideo.started -= OnTotalSideVideoStarted;
+            m_RealProFrontVideo.started += OnTotalFrontVideoStarted;
+            m_RealProSideVideo.started += OnTotalSideVideoStarted;
+
             m_RealProFrontVideo.Play();
             m_RealProSideVideo.Play();
 
-            m_RealUserFrontVideo.Stop();
-            m_RealUserSideVideo.Stop();
+            m_FrontProRealRaw.color = Color.black;
+            m_SideProRealRaw.color = Color.black;
+
+            m_RealUserFrontVideo.StopAndRewind();
+            m_RealUserSideVideo.StopAndRewind();
         }
         else
         {
-            m_RealProFrontVideo.Stop();
-            m_RealProSideVideo.Stop();
-            m_RealUserFrontVideo.Stop();
-            m_RealUserSideVideo.Stop();
+            ResetTotalSwingVideos();
 
             m_RealProFrontVideo.targetDisplay = null;
             m_RealProSideVideo.targetDisplay = null;
@@ -1407,17 +1624,44 @@ public class AICoachingDirector : MonoBehaviour
 
             int idx = (selectStep == SWINGSTEP.BACKSWING) ? 2 : (int)selectStep;
 
-            m_FrontProRealRaw.color = Color.white;
-            m_SideProRealRaw.color = Color.white;
-            m_FrontUserRealRaw.color = Color.white;
-            m_SideUserRealRaw.color = Color.white;
+            m_PoseFrontProRealRaw.color = Color.white;
+            m_PoseSideProRealRaw.color = Color.white;
+            m_PoseFrontUserRealRaw.color = Color.white;
+            m_PoseSideUserRealRaw.color = Color.white;
 
-            m_FrontProRealRaw.texture = captureRealPoseFrontPro[idx];
-            m_SideProRealRaw.texture = captureRealPoseSidePro[idx];
-
-            m_FrontUserRealRaw.texture = captureRealPoseFrontUser[idx];
-            m_SideUserRealRaw.texture = captureRealPoseSideUser[idx];
+            m_PoseFrontProRealRaw.texture = captureRealPoseFrontPro[idx];
+            m_PoseSideProRealRaw.texture = captureRealPoseSidePro[idx];
+            m_PoseFrontUserRealRaw.texture = captureRealPoseFrontUser[idx];
+            m_PoseSideUserRealRaw.texture = captureRealPoseSideUser[idx];
         }
+    }
+
+    private void ResetTotalSwingVideos()
+    {
+        m_RealProFrontVideo.started -= OnTotalFrontVideoStarted;
+        m_RealProSideVideo.started -= OnTotalSideVideoStarted;
+
+        m_RealProFrontVideo.StopAndRewind();
+        m_RealProSideVideo.StopAndRewind();
+        m_RealUserFrontVideo.StopAndRewind();
+        m_RealUserSideVideo.StopAndRewind();
+
+        m_FrontProRealRaw.color = Color.black;
+        m_SideProRealRaw.color = Color.black;
+        m_FrontUserRealRaw.color = Color.black;
+        m_SideUserRealRaw.color = Color.black;
+    }
+
+    private void OnTotalFrontVideoStarted(VLCVideoPlayer player)
+    {
+        player.started -= OnTotalFrontVideoStarted;
+        m_FrontProRealRaw.color = Color.white;
+    }
+
+    private void OnTotalSideVideoStarted(VLCVideoPlayer player)
+    {
+        player.started -= OnTotalSideVideoStarted;
+        m_SideProRealRaw.color = Color.white;
     }
 
     public void Onclick_Button(string name)
@@ -1443,14 +1687,11 @@ public class AICoachingDirector : MonoBehaviour
 
     public void OnClick_Result()
     {
-        m_ProNameText.text = $"{GolfProDataManager.Instance.SelectProData.infoData.name} 프로";
-
         PanelResult.SetActive(true);
 
         m_ResultMainToggles[0].isOn = true;
         m_ResultMainToggles[0].onValueChanged.Invoke(true);
 
-        m_ModelChangeToggle.onValueChanged.Invoke(false);
         m_RealVideoSpeedToggle.onValueChanged.Invoke(false);
     }
 
@@ -1481,6 +1722,14 @@ public class AICoachingDirector : MonoBehaviour
             .SetEase(_isDetailPanelOpen ? Ease.InCubic : Ease.OutCubic);
     }
 
+    private void SetRealViewMode(bool totalMode)
+    {
+        m_TotalRealPro.SetActive(totalMode);
+        m_TotalRealUser.SetActive(totalMode);
+        m_PoseRealPro.SetActive(!totalMode);
+        m_PoseRealUser.SetActive(!totalMode);
+    }
+
     public void OnValueChanged_ResultMainToggle(bool isOn)
     {
         if (m_ResultMainTG.GetFirstActiveToggle() == null)
@@ -1498,26 +1747,31 @@ public class AICoachingDirector : MonoBehaviour
         if (num == 0)
         {
             _isTotalAnalyze = true;
+            SetRealViewMode(true);
             m_AnalyzeGroup.SetActive(true);
             m_Lesson.SetActive(false);
-            m_AnalyzeTotal.SetActive(true);
-            m_AnalyzePose.SetActive(false);
+            m_TotalTop.SetActive(true);
+            m_TotalStepGauge.SetActive(true);
+            m_StepTop.SetActive(false);
 
-            OnValueChanged_ModelChange(_is3DModel);
+            OnValueChanged_ModelChange(false);
 
             //AnimateMatchingRate(0.0f, (myScore.Sum() / (myScore.Count - 2)) * 0.01f);
-            AnimateMatchingRate(0.0f, Mathf.Clamp(totalAnalyzeScore, 0, 100) * 0.01f);
+            int totalDisplayScore = GetTotalDisplayScore();
+            AnimateMatchingRate(0.0f, totalDisplayScore * 0.01f);
             AnimateTotalGraph(myScore, avgScore, 1.1f);
 
-            StartCoroutine(ModelAnimation(true, m_ProModelAni, m_UserModelAni));
         }
         else if (num == 1)
         {
             _isTotalAnalyze = false;
+            ResetTotalSwingVideos();
+            SetRealViewMode(false);
             m_AnalyzeGroup.SetActive(true);
             m_Lesson.SetActive(false);
-            m_AnalyzeTotal.SetActive(false);
-            m_AnalyzePose.SetActive(true);
+            m_TotalTop.SetActive(false);
+            m_TotalStepGauge.SetActive(false);
+            m_StepTop.SetActive(true);
 
             selectStep = SWINGSTEP.ADDRESS;
 
@@ -1526,23 +1780,8 @@ public class AICoachingDirector : MonoBehaviour
                 m_ResultPoseToggles[0].isOn = true;
             }
 
-            m_FrontUserReal.localScale = Vector3.one;
-            m_SideUserReal.localScale = Vector3.one;
-
-            AnimateProgress(addressTimeline.Count > 0 ? addressTimeline[addressTimeline.Count - 1] : 0);
+            AnimateProgress(GetStepScore(addressTimeline, (int)SWINGSTEP.ADDRESS));
             DrawTimeline(addressTimeline);
-
-            StartCoroutine(ModelAnimation(false, m_ProModelAni, m_UserModelAni));
-        }
-        else if (num == 2)
-        {
-            _isTotalAnalyze = false;
-            m_AnalyzeGroup.SetActive(false);
-            m_Lesson.SetActive(true);
-            m_AnalyzeTotal.SetActive(false);
-            m_AnalyzePose.SetActive(false);
-
-            StartCoroutine(ModelAnimation(false, m_ProModelAni, m_UserModelAni));
         }
 
         VideoControl();
@@ -1566,17 +1805,40 @@ public class AICoachingDirector : MonoBehaviour
 
         switch (num)
         {
-            case 0: AnimateProgress(addressTimeline.Count > 0 ? addressTimeline[addressTimeline.Count - 1] : 0); DrawTimeline(addressTimeline); break;
-            case 1: AnimateProgress(takebackTimeline.Count > 0 ? takebackTimeline[takebackTimeline.Count - 1] : 0); DrawTimeline(takebackTimeline); break;
-            case 2: AnimateProgress(backswingTimeline.Count > 0 ? backswingTimeline[backswingTimeline.Count - 1] : 0); DrawTimeline(backswingTimeline); break;
-            case 3: AnimateProgress(topTimeline.Count > 0 ? topTimeline[topTimeline.Count - 1] : 0); DrawTimeline(topTimeline); break;
-            case 4: AnimateProgress(downswingTimeline.Count > 0 ? downswingTimeline[downswingTimeline.Count - 1] : 0); DrawTimeline(downswingTimeline); break;
-            case 5: AnimateProgress(impactTimeline.Count > 0 ? impactTimeline[impactTimeline.Count - 1] : 0); DrawTimeline(impactTimeline); break;
-            case 6: AnimateProgress(followTimeline.Count > 0 ? followTimeline[followTimeline.Count - 1] : 0); DrawTimeline(followTimeline); break;
-            case 7: AnimateProgress(finishTimeline.Count > 0 ? finishTimeline[finishTimeline.Count - 1] : 0); DrawTimeline(finishTimeline); break;
+            case 0:
+                AnimateProgress(GetStepScore(addressTimeline, (int)SWINGSTEP.ADDRESS));
+                DrawTimeline(addressTimeline);
+                break;
+            case 1:
+                AnimateProgress(GetStepScore(takebackTimeline, (int)SWINGSTEP.TAKEBACK));
+                DrawTimeline(takebackTimeline);
+                break;
+            case 2:
+                AnimateProgress(GetStepScore(backswingTimeline, (int)SWINGSTEP.BACKSWING));
+                DrawTimeline(backswingTimeline);
+                break;
+            case 3:
+                AnimateProgress(GetStepScore(topTimeline, (int)SWINGSTEP.TOP));
+                DrawTimeline(topTimeline);
+                break;
+            case 4:
+                AnimateProgress(GetStepScore(downswingTimeline, (int)SWINGSTEP.DOWNSWING));
+                DrawTimeline(downswingTimeline);
+                break;
+            case 5:
+                AnimateProgress(GetStepScore(impactTimeline, (int)SWINGSTEP.IMPACT));
+                DrawTimeline(impactTimeline);
+                break;
+            case 6:
+                AnimateProgress(GetStepScore(followTimeline, (int)SWINGSTEP.FOLLOW));
+                DrawTimeline(followTimeline);
+                break;
+            case 7:
+                AnimateProgress(GetStepScore(finishTimeline, (int)SWINGSTEP.FINISH));
+                DrawTimeline(finishTimeline);
+                break;
         }
 
-        StartCoroutine(ModelAnimation(false, m_ProModelAni, m_UserModelAni));
         VideoControl();
     }
 
@@ -1606,41 +1868,30 @@ public class AICoachingDirector : MonoBehaviour
 
     public void OnValueChanged_ModelChange(bool isOn)
     {
-        _is3DModel = isOn;
+        _is3DModel = false;
+        m_Models[0].SetActive(false);
+        m_Models[1].SetActive(true);
 
-        m_Models[0].SetActive(isOn);
-        m_Models[1].SetActive(!isOn);
-
-        if (isOn)
+        if (_isTotalAnalyze)
         {
-            StartCoroutine(ModelAnimation(_isTotalAnalyze, m_ProModelAni, m_UserModelAni));
+            int uid = GolfProDataManager.Instance.SelectProData.uid;
+
+            string proPath = GolfProDataManager.Instance.SelectProData.videoData
+                .Where(v => v.direction == EPoseDirection.Front && v.videoType == EVideoType.Swing && v.clubFilter == EClub.MiddleIron && v.swingType == ESwingType.Full)
+                .Select(v => v.path).FirstOrDefault();
+
+            m_RealProFrontVideo.url = GameManager.Instance.LoadVideoURL($"{INI.proVideoPath}{uid}/{proPath}");
+
+            proPath = GolfProDataManager.Instance.SelectProData.videoData
+                .Where(v => v.direction == EPoseDirection.Side && v.videoType == EVideoType.Swing && v.clubFilter == EClub.MiddleIron && v.swingType == ESwingType.Full)
+                .Select(v => v.path).FirstOrDefault();
+
+            m_RealProSideVideo.url = GameManager.Instance.LoadVideoURL($"{INI.proVideoPath}{uid}/{proPath}");
+            m_RealUserFrontVideo.url = string.Empty;
+            m_RealUserSideVideo.url = string.Empty;
         }
-        else
-        {
-            if (_isTotalAnalyze)
-            {
-                int uid = GolfProDataManager.Instance.SelectProData.uid;
 
-                string proPath = GolfProDataManager.Instance.SelectProData.videoData
-                    .Where(v => v.direction == EPoseDirection.Front && v.videoType == EVideoType.Swing && v.clubFilter == EClub.MiddleIron && v.swingType == ESwingType.Full)
-                    .Select(v => v.path).FirstOrDefault();
-
-                m_RealProFrontVideo.url = GameManager.Instance.LoadVideoURL($"{INI.proVideoPath}{uid}/{proPath}");
-
-                proPath = GolfProDataManager.Instance.SelectProData.videoData
-                    .Where(v => v.direction == EPoseDirection.Side && v.videoType == EVideoType.Swing && v.clubFilter == EClub.MiddleIron && v.swingType == ESwingType.Full)
-                    .Select(v => v.path).FirstOrDefault();
-
-                m_RealProSideVideo.url = GameManager.Instance.LoadVideoURL($"{INI.proVideoPath}{uid}/{proPath}");
-
-                m_RealUserFrontVideo.url = string.Empty;
-                m_RealUserSideVideo.url = string.Empty;
-            }
-            else
-            {
-                VideoControl();
-            }
-        }
+        VideoControl();
     }
 
     public void OnValueChanged_RealVideoSpeed(bool isOn)
@@ -1801,8 +2052,15 @@ public class AICoachingDirector : MonoBehaviour
 
     private Texture2D ResizeIfNeeded(Texture2D src, int maxWidth)
     {
-        if (src == null) return null;
-        if (maxWidth <= 0 || src.width <= maxWidth) return src;
+        if (src == null)
+        {
+            return null;
+        }
+
+        if (maxWidth <= 0 || src.width <= maxWidth)
+        {
+            return src;
+        }
 
         float ratio = (float)maxWidth / (float)src.width;
         int newW = maxWidth;
@@ -1826,7 +2084,10 @@ public class AICoachingDirector : MonoBehaviour
 
     private string SaveFrameJpg(Texture2D tex, string fileName)
     {
-        if (tex == null) return string.Empty;
+        if (tex == null)
+        {
+            return string.Empty;
+        }
 
         EnsureDebugFrameDir();
         string path = Path.Combine(_debugFrameDir, fileName);
@@ -1917,7 +2178,10 @@ public class AICoachingDirector : MonoBehaviour
 
     private Texture2D ApplyThumbnailTransform(Texture2D src)
     {
-        if (src == null) return null;
+        if (src == null)
+        {
+            return null;
+        }
 
         Texture2D rotated = Rotate90(src, false);
 
@@ -1928,7 +2192,10 @@ public class AICoachingDirector : MonoBehaviour
         }
         finally
         {
-            if (rotated != null) Destroy(rotated);
+            if (rotated != null)
+            {
+                Destroy(rotated);
+            }
         }
 
         return fixedTex;
@@ -1936,7 +2203,10 @@ public class AICoachingDirector : MonoBehaviour
 
     private Texture2D MirrorX(Texture2D src)
     {
-        if (src == null) return null;
+        if (src == null)
+        {
+            return null;
+        }
 
         int w = src.width;
         int h = src.height;
@@ -2075,15 +2345,33 @@ public class AICoachingDirector : MonoBehaviour
 
         switch (step)
         {
-            case 0: selectedKeys = new[] { "GetShoulderAngle", "GetWaistSideDir", "GetKneeSideDir" }; break;                 // ADDRESS
-            case 1: selectedKeys = new[] { "GetForearmAngle", "GetShoulderAngle" }; break;                                  // TAKEBACK
-            case 2: selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" }; break;       // BACKSWING
-            case 3: selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" }; break;       // TOP
-            case 4: selectedKeys = new[] { "GetShoulderDir", "GetHandSideDir", "GetSpineDir", "GetWeight" }; break;         // DOWNSWING
-            case 5: selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir" }; break;                                       // IMPACT
-            case 6: selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" }; break;                                       // FOLLOW
-            case 7: selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" }; break;                                       // FINISH
-            default: selectedKeys = new string[] { }; break;
+            case 0:                 // ADDRESS
+                selectedKeys = new[] { "GetShoulderAngle", "GetWaistSideDir", "GetKneeSideDir" };
+                break;
+            case 1:                                  // TAKEBACK
+                selectedKeys = new[] { "GetForearmAngle", "GetShoulderAngle" };
+                break;
+            case 2:       // BACKSWING
+                selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" };
+                break;
+            case 3:       // TOP
+                selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" };
+                break;
+            case 4:         // DOWNSWING
+                selectedKeys = new[] { "GetShoulderDir", "GetHandSideDir", "GetSpineDir", "GetWeight" };
+                break;
+            case 5:                                       // IMPACT
+                selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir" };
+                break;
+            case 6:                                       // FOLLOW
+                selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" };
+                break;
+            case 7:                                       // FINISH
+                selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" };
+                break;
+            default:
+                selectedKeys = new string[] { };
+                break;
         }
 
         const int IDX_DOWNSWING = 4;
@@ -2146,15 +2434,24 @@ public class AICoachingDirector : MonoBehaviour
     {
         switch (step)
         {
-            case 0: return addressTimeline;
-            case 1: return takebackTimeline;
-            case 2: return backswingTimeline;
-            case 3: return topTimeline;
-            case 4: return downswingTimeline;
-            case 5: return impactTimeline;
-            case 6: return followTimeline;
-            case 7: return finishTimeline;
-            default: return null;
+            case 0:
+                return addressTimeline;
+            case 1:
+                return takebackTimeline;
+            case 2:
+                return backswingTimeline;
+            case 3:
+                return topTimeline;
+            case 4:
+                return downswingTimeline;
+            case 5:
+                return impactTimeline;
+            case 6:
+                return followTimeline;
+            case 7:
+                return finishTimeline;
+            default:
+                return null;
         }
     }
 
@@ -2219,6 +2516,7 @@ public class AICoachingDirector : MonoBehaviour
                 prevTotal += myScore[s];
                 prevCount++;
             }
+
             stepScore = (prevCount > 0) ? Mathf.RoundToInt(prevTotal / prevCount) : 0;
         }
 
@@ -2229,15 +2527,24 @@ public class AICoachingDirector : MonoBehaviour
     {
         switch (step)
         {
-            case 0: return aiSwingStepData.dicAddress;
-            case 1: return aiSwingStepData.dicTakeback;
-            case 2: return aiSwingStepData.dicBackswing;
-            case 3: return aiSwingStepData.dicTop;
-            case 4: return aiSwingStepData.dicDownswing;
-            case 5: return aiSwingStepData.dicImpact;
-            case 6: return aiSwingStepData.dicFollow;
-            case 7: return aiSwingStepData.dicFinish;
-            default: return null;
+            case 0:
+                return aiSwingStepData.dicAddress;
+            case 1:
+                return aiSwingStepData.dicTakeback;
+            case 2:
+                return aiSwingStepData.dicBackswing;
+            case 3:
+                return aiSwingStepData.dicTop;
+            case 4:
+                return aiSwingStepData.dicDownswing;
+            case 5:
+                return aiSwingStepData.dicImpact;
+            case 6:
+                return aiSwingStepData.dicFollow;
+            case 7:
+                return aiSwingStepData.dicFinish;
+            default:
+                return null;
         }
     }
 
@@ -2439,7 +2746,11 @@ public class AICoachingDirector : MonoBehaviour
 
     private bool ImportRgbStreamBytes(byte[] data, int width, int height, List<byte[]> outFrames)
     {
-        if (outFrames == null) return false;
+        if (outFrames == null)
+        {
+            return false;
+        }
+
         outFrames.Clear();
 
         if (data == null || data.Length == 0)
@@ -2468,8 +2779,15 @@ public class AICoachingDirector : MonoBehaviour
 
     private void TryImportFramesFromExternalRgb()
     {
-        if (_importedExternalRgbFrames) return;
-        if (!useExternalRgbAnalyze) return;
+        if (_importedExternalRgbFrames)
+        {
+            return;
+        }
+
+        if (!useExternalRgbAnalyze)
+        {
+            return;
+        }
 
         if (externalFrontRgbTextAssets == null || externalFrontRgbTextAssets.Length == 0)
         {
@@ -2517,8 +2835,15 @@ public class AICoachingDirector : MonoBehaviour
         else
         {
             int min = Mathf.Min(framesFront.Count, framesSide.Count);
-            if (framesFront.Count != min) framesFront.RemoveRange(min, framesFront.Count - min);
-            if (framesSide.Count != min) framesSide.RemoveRange(min, framesSide.Count - min);
+            if (framesFront.Count != min)
+            {
+                framesFront.RemoveRange(min, framesFront.Count - min);
+            }
+
+            if (framesSide.Count != min)
+            {
+                framesSide.RemoveRange(min, framesSide.Count - min);
+            }
         }
 
         widthFront = externalRgbWidth;
@@ -2562,8 +2887,12 @@ public class AICoachingDirector : MonoBehaviour
 
         for (int i = 0; i < framesFront.Count; i++)
         {
-            if (framesFront[i] != null && framesFront[i].Length > 0) validFront++;
+            if (framesFront[i] != null && framesFront[i].Length > 0)
+            {
+                validFront++;
+            }
         }
+
         Debug.Log($"[Analyze] frameCount={framesFront.Count}, validFront={validFront}, captureDone={_captureDone}");
 
         float[] proTargets = BuildProHandDirTargets();
@@ -2635,14 +2964,28 @@ public class AICoachingDirector : MonoBehaviour
                             .AppendLine();
                     }
 
-                    if (frontTex != null) Destroy(frontTex);
-                    if (sideTex != null) Destroy(sideTex);
+                    if (frontTex != null)
+                    {
+                        Destroy(frontTex);
+                    }
+
+                    if (sideTex != null)
+                    {
+                        Destroy(sideTex);
+                    }
                 }
             }
             finally
             {
-                if (frontRaw != null) Destroy(frontRaw);
-                if (sideRaw != null) Destroy(sideRaw);
+                if (frontRaw != null)
+                {
+                    Destroy(frontRaw);
+                }
+
+                if (sideRaw != null)
+                {
+                    Destroy(sideRaw);
+                }
             }
 
             handNF.Add(rawHand);
@@ -2730,7 +3073,10 @@ public class AICoachingDirector : MonoBehaviour
 
         int FindLocalMinInRange(List<int> seq, int start, int end, int maxAbsValue = 360)
         {
-            if (seq == null || seq.Count == 0) return -1;
+            if (seq == null || seq.Count == 0)
+            {
+                return -1;
+            }
 
             start = Mathf.Clamp(start, 0, seq.Count - 1);
             end = Mathf.Clamp(end, 0, seq.Count - 1);
@@ -2757,6 +3103,7 @@ public class AICoachingDirector : MonoBehaviour
                     bestIdx = i;
                 }
             }
+
             return bestIdx;
         }
 
@@ -2810,6 +3157,7 @@ public class AICoachingDirector : MonoBehaviour
                 if (target >= min && target <= max)
                     return i;
             }
+
             return -1;
         }
 
@@ -2849,6 +3197,7 @@ public class AICoachingDirector : MonoBehaviour
 
                 return (diffB < diffA) ? (i + 1) : i;
             }
+
             return -1;
         }
 
@@ -2941,7 +3290,10 @@ public class AICoachingDirector : MonoBehaviour
             for (int i = 0; i < frameCount; i++)
             {
                 int v = handNF[i];
-                if (v < 0) continue;
+                if (v < 0)
+                {
+                    continue;
+                }
 
                 if (v >= minAddr)
                 {
@@ -2954,7 +3306,11 @@ public class AICoachingDirector : MonoBehaviour
             {
                 for (int i = 0; i < frameCount; i++)
                 {
-                    if (handNF[i] >= 0) { idx = i; break; }
+                    if (handNF[i] >= 0)
+                    {
+                        idx = i;
+                        break;
+                    }
                 }
             }
 
@@ -2985,7 +3341,11 @@ public class AICoachingDirector : MonoBehaviour
             {
                 for (int i = start; i <= end && i < handNF.Count; i++)
                 {
-                    if (handNF[i] >= 0) { idx = i; break; }
+                    if (handNF[i] >= 0)
+                    {
+                        idx = i;
+                        break;
+                    }
                 }
             }
 
@@ -3012,7 +3372,10 @@ public class AICoachingDirector : MonoBehaviour
         }
 
         // TOP = BACKSWING
-        if (stepIndex[2] >= 0) stepIndex[3] = stepIndex[2];
+        if (stepIndex[2] >= 0)
+        {
+            stepIndex[3] = stepIndex[2];
+        }
 
         // DOWNSWING
         {
@@ -3069,7 +3432,10 @@ public class AICoachingDirector : MonoBehaviour
         }
 
         // IMPACT = DOWNSWING
-        if (stepIndex[4] >= 0) stepIndex[5] = stepIndex[4];
+        if (stepIndex[4] >= 0)
+        {
+            stepIndex[5] = stepIndex[4];
+        }
 
         // FOLLOW
         {
@@ -3408,7 +3774,10 @@ public class AICoachingDirector : MonoBehaviour
         {
             for (int i = 0; i < captureRealPoseFrontUser.Count; i++)
             {
-                if (captureRealPoseFrontUser[i] != null) Destroy(captureRealPoseFrontUser[i]);
+                if (captureRealPoseFrontUser[i] != null)
+                {
+                    Destroy(captureRealPoseFrontUser[i]);
+                }
             }
         }
 
@@ -3416,7 +3785,10 @@ public class AICoachingDirector : MonoBehaviour
         {
             for (int i = 0; i < captureRealPoseSideUser.Count; i++)
             {
-                if (captureRealPoseSideUser[i] != null) Destroy(captureRealPoseSideUser[i]);
+                if (captureRealPoseSideUser[i] != null)
+                {
+                    Destroy(captureRealPoseSideUser[i]);
+                }
             }
         }
     }
@@ -3457,14 +3829,45 @@ public class AICoachingDirector : MonoBehaviour
         {
             try
             {
-                if (step == SWINGSTEP.ADDRESS) return aiSwingStepData.dicAddress[key];
-                if (step == SWINGSTEP.TAKEBACK) return aiSwingStepData.dicTakeback[key];
-                if (step == SWINGSTEP.BACKSWING) return aiSwingStepData.dicBackswing[key];
-                if (step == SWINGSTEP.TOP) return aiSwingStepData.dicTop[key];
-                if (step == SWINGSTEP.DOWNSWING) return aiSwingStepData.dicDownswing[key];
-                if (step == SWINGSTEP.IMPACT) return aiSwingStepData.dicImpact[key];
-                if (step == SWINGSTEP.FOLLOW) return aiSwingStepData.dicFollow[key];
-                if (step == SWINGSTEP.FINISH) return aiSwingStepData.dicFinish[key];
+                if (step == SWINGSTEP.ADDRESS)
+                {
+                    return aiSwingStepData.dicAddress[key];
+                }
+
+                if (step == SWINGSTEP.TAKEBACK)
+                {
+                    return aiSwingStepData.dicTakeback[key];
+                }
+
+                if (step == SWINGSTEP.BACKSWING)
+                {
+                    return aiSwingStepData.dicBackswing[key];
+                }
+
+                if (step == SWINGSTEP.TOP)
+                {
+                    return aiSwingStepData.dicTop[key];
+                }
+
+                if (step == SWINGSTEP.DOWNSWING)
+                {
+                    return aiSwingStepData.dicDownswing[key];
+                }
+
+                if (step == SWINGSTEP.IMPACT)
+                {
+                    return aiSwingStepData.dicImpact[key];
+                }
+
+                if (step == SWINGSTEP.FOLLOW)
+                {
+                    return aiSwingStepData.dicFollow[key];
+                }
+
+                if (step == SWINGSTEP.FINISH)
+                {
+                    return aiSwingStepData.dicFinish[key];
+                }
             }
             catch { }
 
@@ -3982,6 +4385,7 @@ public class AICoachingDirector : MonoBehaviour
         {
             sb.Append(',').Append(((SWINGSTEP)s).ToString());
         }
+
         sb.AppendLine();
 
         List<string> keys = new List<string>(userData.Keys);
@@ -4127,15 +4531,33 @@ public class AICoachingDirector : MonoBehaviour
 
         switch (step)
         {
-            case 0: selectedKeys = new[] { "GetShoulderAngle", "GetWaistSideDir", "GetKneeSideDir" }; break;
-            case 1: selectedKeys = new[] { "GetForearmAngle", "GetShoulderAngle" }; break;
-            case 2: selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" }; break;
-            case 3: selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" }; break;
-            case 4: selectedKeys = new[] { "GetShoulderDir", "GetHandSideDir", "GetSpineDir", "GetWeight" }; break;
-            case 5: selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir" }; break;
-            case 6: selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" }; break;
-            case 7: selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" }; break;
-            default: selectedKeys = new string[] { }; break;
+            case 0:
+                selectedKeys = new[] { "GetShoulderAngle", "GetWaistSideDir", "GetKneeSideDir" };
+                break;
+            case 1:
+                selectedKeys = new[] { "GetForearmAngle", "GetShoulderAngle" };
+                break;
+            case 2:
+                selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" };
+                break;
+            case 3:
+                selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir", "GetForearmAngle", "GetWeight" };
+                break;
+            case 4:
+                selectedKeys = new[] { "GetShoulderDir", "GetHandSideDir", "GetSpineDir", "GetWeight" };
+                break;
+            case 5:
+                selectedKeys = new[] { "GetShoulderDir", "GetPelvisDir" };
+                break;
+            case 6:
+                selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" };
+                break;
+            case 7:
+                selectedKeys = new[] { "GetPelvisDir", "GetShoulderDir" };
+                break;
+            default:
+                selectedKeys = new string[] { };
+                break;
         }
 
         const int downswingIndex = 4;
@@ -4385,15 +4807,24 @@ public class AICoachingDirector : MonoBehaviour
     {
         switch (key)
         {
-            case "GetShoulderDir": return snapshot.shoulderDir;
-            case "GetPelvisDir": return snapshot.pelvisDir;
-            case "GetSpineDir": return snapshot.spineDir;
-            case "GetWeight": return snapshot.weight;
-            case "GetForearmAngle": return snapshot.forearmAngle;
-            case "GetHandSideDir": return snapshot.handSideDir;
-            case "GetWaistSideDir": return snapshot.waistSideDir;
-            case "GetKneeSideDir": return snapshot.kneeSideDir;
-            default: return -1;
+            case "GetShoulderDir":
+                return snapshot.shoulderDir;
+            case "GetPelvisDir":
+                return snapshot.pelvisDir;
+            case "GetSpineDir":
+                return snapshot.spineDir;
+            case "GetWeight":
+                return snapshot.weight;
+            case "GetForearmAngle":
+                return snapshot.forearmAngle;
+            case "GetHandSideDir":
+                return snapshot.handSideDir;
+            case "GetWaistSideDir":
+                return snapshot.waistSideDir;
+            case "GetKneeSideDir":
+                return snapshot.kneeSideDir;
+            default:
+                return -1;
         }
     }
 
@@ -4533,6 +4964,7 @@ public class AICoachingDirector : MonoBehaviour
         {
             sb.Append(',').Append(((SWINGSTEP)s).ToString());
         }
+
         sb.AppendLine();
 
         List<string> keys = new List<string>(userData.Keys);

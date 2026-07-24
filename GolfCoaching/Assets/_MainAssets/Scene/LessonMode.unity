@@ -521,7 +521,7 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 19157368}
   toggleTransition: 1
-  graphic: {fileID: 1451939538}
+  graphic: {fileID: 1227590916}
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
@@ -547,7 +547,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d404d97d6d9c2c54ba348e8425ecdbcc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 24807f7aac9cc9cc880d38e0a365f934, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -577,14 +577,15 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1451939540}
+  - {fileID: 1227590918}
+  - {fileID: 2013454464}
   m_Father: {fileID: 999604266}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 982, y: -232}
-  m_SizeDelta: {x: 80, y: 80}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -20, y: -266}
+  m_SizeDelta: {x: 120, y: 130}
+  m_Pivot: {x: 1, y: 1}
 --- !u!1 &23212937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1837,7 +1838,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_ArrayPanel
         m_Mode: 1
         m_Arguments:
@@ -2399,6 +2400,138 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45421746}
   m_CullTransparentMesh: 0
+--- !u!1 &52191563
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 52191564}
+  - component: {fileID: 52191567}
+  - component: {fileID: 52191566}
+  - component: {fileID: 52191565}
+  m_Layer: 5
+  m_Name: Repeat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &52191564
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52191563}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 385113075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 180, y: -240}
+  m_SizeDelta: {x: 720, y: 160}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &52191565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52191563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 52191566}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1854485532}
+        m_TargetAssemblyTypeName: VideoPlayerControl, Assembly-CSharp
+        m_MethodName: OnClick_ResultRepeat
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &52191566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52191563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 9ef8ddcf70d1271e68af733f5898c6cb, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &52191567
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52191563}
+  m_CullTransparentMesh: 1
 --- !u!1 &52884166
 GameObject:
   m_ObjectHideFlags: 0
@@ -3717,7 +3850,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ba0c995c71177aa42a74045e4a2589ab, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33b55bc6cb148f1dfb644bbd9de4d99d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3780,7 +3913,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: Onclick_Button
         m_Mode: 5
         m_Arguments:
@@ -3882,7 +4015,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -4599,7 +4732,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: Onclick_Button
         m_Mode: 5
         m_Arguments:
@@ -5903,7 +6036,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -6487,7 +6620,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -8112,6 +8245,143 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 229892367}
   m_CullTransparentMesh: 1
+--- !u!1 &231135703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 231135704}
+  - component: {fileID: 231135706}
+  - component: {fileID: 231135705}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &231135704
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231135703}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 775555826}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &231135705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231135703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\uCE74\uBA54\uB77C"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: efd3f00db78a8f84a8797556685e4343, type: 2}
+  m_sharedMaterial: {fileID: -877618391739941100, guid: efd3f00db78a8f84a8797556685e4343, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &231135706
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231135703}
+  m_CullTransparentMesh: 1
 --- !u!1 &231863191
 GameObject:
   m_ObjectHideFlags: 0
@@ -8195,7 +8465,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -9089,7 +9359,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -9918,7 +10188,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -12750,6 +13020,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 382765103}
   m_CullTransparentMesh: 1
+--- !u!1 &385113074
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 385113075}
+  - component: {fileID: 385113077}
+  - component: {fileID: 385113076}
+  m_Layer: 5
+  m_Name: Result
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &385113075
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385113074}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.99997836, y: 0.99997836, z: 0.99997836}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 52191564}
+  - {fileID: 1339966330}
+  - {fileID: 524841194}
+  m_Father: {fileID: 494081368}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &385113076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385113074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.08235294, g: 0.09803922, b: 0.14117648, a: 0.74509805}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 1ab53ea478d745b4eb87497b48244d37, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &385113077
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385113074}
+  m_CullTransparentMesh: 1
 --- !u!1 &391059655
 GameObject:
   m_ObjectHideFlags: 0
@@ -15131,7 +15479,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -15271,7 +15619,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -15410,7 +15758,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -17086,7 +17434,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -17171,9 +17519,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1854485536}
-  - {fileID: 507468553}
-  - {fileID: 999604266}
+  - {fileID: 1248313086}
   - {fileID: 817314746}
+  - {fileID: 385113075}
   m_Father: {fileID: 1139979365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -17740,7 +18088,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 494081368}
+    m_TransformParent: {fileID: 1248313086}
     m_Modifications:
     - target: {fileID: 14116798192418354, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_SizeDelta.x
@@ -17768,11 +18116,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 14116798192418354, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000049591
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 14116798192418354, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000061035
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 14116798192418354, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -17870,6 +18218,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Viewer_Webcam
       objectReference: {fileID: 0}
+    - target: {fileID: 5400299269719405291, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5819045534798763264, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_SizeDelta.x
       value: 488
@@ -17900,11 +18252,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5819045534798763264, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000049591
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 5819045534798763264, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000061035
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 5819045534798763264, guid: ae1d9d9b0935b9b41886237ef4aeca55, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -18492,6 +18844,138 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516463766}
   m_CullTransparentMesh: 0
+--- !u!1 &524841193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 524841194}
+  - component: {fileID: 524841197}
+  - component: {fileID: 524841196}
+  - component: {fileID: 524841195}
+  m_Layer: 5
+  m_Name: Exit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &524841194
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524841193}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 385113075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 180, y: -688}
+  m_SizeDelta: {x: 720, y: 160}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &524841195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524841193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 524841196}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1854485532}
+        m_TargetAssemblyTypeName: VideoPlayerControl, Assembly-CSharp
+        m_MethodName: OnClick_ResultExit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &524841196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524841193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 62bfedcaf91553dd5b168919222f0694, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &524841197
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524841193}
+  m_CullTransparentMesh: 1
 --- !u!1 &525177649
 GameObject:
   m_ObjectHideFlags: 0
@@ -19715,7 +20199,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -20815,7 +21299,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_ArrayPanel
         m_Mode: 1
         m_Arguments:
@@ -20948,7 +21432,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -21088,7 +21572,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -22027,7 +22511,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -22802,7 +23286,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: Onclick_Button
         m_Mode: 5
         m_Arguments:
@@ -24227,7 +24711,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -25438,7 +25922,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: Onclick_Button
         m_Mode: 5
         m_Arguments:
@@ -26742,14 +27226,15 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 231135704}
   m_Father: {fileID: 999604266}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 982, y: -140}
-  m_SizeDelta: {x: 80, y: 80}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -20, y: -124}
+  m_SizeDelta: {x: 120, y: 130}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &775555827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26770,7 +27255,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2837f33ae9435bc41922c1ecf06351f6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 24807f7aac9cc9cc880d38e0a365f934, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -27291,7 +27776,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -27853,7 +28338,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: Onclick_Button
         m_Mode: 5
         m_Arguments:
@@ -30247,7 +30732,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -31337,7 +31822,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -32892,7 +33377,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -33968,7 +34453,7 @@ RectTransform:
   - {fileID: 775555826}
   - {fileID: 2067734778}
   - {fileID: 19157370}
-  m_Father: {fileID: 494081368}
+  m_Father: {fileID: 1248313086}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -34286,7 +34771,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_ApplyFilter
         m_Mode: 1
         m_Arguments:
@@ -36857,7 +37342,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -37434,7 +37919,7 @@ GameObject:
   - component: {fileID: 1117318095}
   - component: {fileID: 1117318096}
   m_Layer: 0
-  m_Name: '#FocusCoaching Director'
+  m_Name: '#Lesson Director'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37464,12 +37949,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1117318093}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dba032b7de20c684a976a5e061d00d60, type: 3}
+  m_Script: {fileID: 11500000, guid: 975ed2d3c5787a2d7b3c08e3328ac219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   videoPlayerControl: {fileID: 1854485532}
   m_VideoFinishPanel: {fileID: 142561484}
-  _SearchPopup: {fileID: 1971700820}
   m_BottomBack: {fileID: 5598350162930057630}
   m_PopupObjs:
   - {fileID: 1532736354}
@@ -37507,24 +37991,13 @@ MonoBehaviour:
   - {fileID: 324628810}
   - {fileID: 297730312}
   - {fileID: 779191542}
-  m_ClubAllFilter: {fileID: 43324997}
-  m_ClubFilters:
-  - {fileID: 261393480}
-  - {fileID: 394474181}
-  - {fileID: 549103520}
-  - {fileID: 1694000652}
-  - {fileID: 313511612}
-  - {fileID: 1252827542}
-  - {fileID: 746538882}
   m_ArrayFilters:
   - {fileID: 428218191}
   - {fileID: 1218479170}
   - {fileID: 429344137}
   m_PoseTg: {fileID: 1102027807}
-  m_ClubTg: {fileID: 43325000}
   m_ArrayTg: {fileID: 1439428915}
   m_PoseStateTxt: {fileID: 963168697}
-  m_ClubStateTxt: {fileID: 686298529}
   m_ArrayFilterText: {fileID: 2122577595}
 --- !u!1 &1128818004
 GameObject:
@@ -38170,7 +38643,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -39266,7 +39739,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -39927,6 +40400,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226303255}
   m_CullTransparentMesh: 0
+--- !u!1 &1227590915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1227590918}
+  - component: {fileID: 1227590917}
+  - component: {fileID: 1227590916}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1227590916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227590915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 3d126c8e3adcd650c8db73f74f676ee7, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1227590917
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227590915}
+  m_CullTransparentMesh: 1
+--- !u!224 &1227590918
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227590915}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 19157370}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1232885988
 GameObject:
   m_ObjectHideFlags: 0
@@ -40081,6 +40629,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236823733}
   m_CullTransparentMesh: 0
+--- !u!1 &1248313085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1248313086}
+  m_Layer: 5
+  m_Name: PlayUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1248313086
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248313085}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 507468553}
+  - {fileID: 999604266}
+  m_Father: {fileID: 494081368}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1249747101
 GameObject:
   m_ObjectHideFlags: 0
@@ -42105,7 +42690,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_ResetPose
         m_Mode: 1
         m_Arguments:
@@ -42515,6 +43100,138 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339941790}
+  m_CullTransparentMesh: 1
+--- !u!1 &1339966329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1339966330}
+  - component: {fileID: 1339966333}
+  - component: {fileID: 1339966332}
+  - component: {fileID: 1339966331}
+  m_Layer: 5
+  m_Name: List
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1339966330
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339966329}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 385113075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 180, y: -464}
+  m_SizeDelta: {x: 720, y: 160}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &1339966331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339966329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1339966332}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1854485532}
+        m_TargetAssemblyTypeName: VideoPlayerControl, Assembly-CSharp
+        m_MethodName: OnClick_ResultList
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1339966332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339966329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: ac2e0d303753840e28f38476174c314c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1339966333
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339966329}
   m_CullTransparentMesh: 1
 --- !u!1 &1343385389
 GameObject:
@@ -46063,7 +46780,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_NextPage
         m_Mode: 1
         m_Arguments:
@@ -46894,7 +47611,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -47416,81 +48133,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451764329}
   m_CullTransparentMesh: 0
---- !u!1 &1451939537
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1451939540}
-  - component: {fileID: 1451939539}
-  - component: {fileID: 1451939538}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1451939538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451939537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e1e5d93464a6677419cd667d22ec7e06, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1451939539
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451939537}
-  m_CullTransparentMesh: 1
---- !u!224 &1451939540
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451939537}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 19157370}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 80}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1456765088
 GameObject:
   m_ObjectHideFlags: 0
@@ -49023,7 +49665,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -49559,7 +50201,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -50709,7 +51351,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -54798,8 +55440,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
-        m_MethodName: OnClick_ResetClub
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -55494,7 +56136,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_ApplyFilter
         m_Mode: 1
         m_Arguments:
@@ -58498,7 +59140,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -58997,6 +59639,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FocusCoachingdirector: {fileID: 1117318096}
   m_VideoFinishPanel: {fileID: 142561484}
+  ResultPanel: {fileID: 385113074}
+  PlayUI: {fileID: 1248313085}
   TopPanel: {fileID: 1872593406}
   videoPlayer: {fileID: 1854485533}
   txtLessonTitle: {fileID: 1865448701}
@@ -59175,7 +59819,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_PrevPage
         m_Mode: 1
         m_Arguments:
@@ -61029,7 +61673,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -61204,6 +61848,143 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1916905365}
   m_CullTransparentMesh: 0
+--- !u!1 &1921153515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1921153516}
+  - component: {fileID: 1921153518}
+  - component: {fileID: 1921153517}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1921153516
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921153515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2067734778}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1921153517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921153515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\uD654\uBA74\n\uC804\uD658"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: efd3f00db78a8f84a8797556685e4343, type: 2}
+  m_sharedMaterial: {fileID: -877618391739941100, guid: efd3f00db78a8f84a8797556685e4343, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1921153518
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921153515}
+  m_CullTransparentMesh: 1
 --- !u!1 &1928016515
 GameObject:
   m_ObjectHideFlags: 0
@@ -62960,7 +63741,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Popup
         m_Mode: 3
         m_Arguments:
@@ -63399,6 +64180,143 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006411244}
   m_CullTransparentMesh: 0
+--- !u!1 &2013454463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2013454464}
+  - component: {fileID: 2013454466}
+  - component: {fileID: 2013454465}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2013454464
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013454463}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 19157370}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2013454465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013454463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\uBC18\uBCF5\n\uC7AC\uC0DD"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: efd3f00db78a8f84a8797556685e4343, type: 2}
+  m_sharedMaterial: {fileID: -877618391739941100, guid: efd3f00db78a8f84a8797556685e4343, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &2013454466
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013454463}
+  m_CullTransparentMesh: 1
 --- !u!1 &2019444899
 GameObject:
   m_ObjectHideFlags: 0
@@ -63766,7 +64684,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:
@@ -65533,7 +66451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2067734778
 RectTransform:
   m_ObjectHideFlags: 0
@@ -65545,14 +66463,15 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1921153516}
   m_Father: {fileID: 999604266}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 982, y: -232}
-  m_SizeDelta: {x: 80, y: 80}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -20, y: -408}
+  m_SizeDelta: {x: 120, y: 130}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &2067734779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65573,7 +66492,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 637a797664af7244d93ae0d804204660, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 24807f7aac9cc9cc880d38e0a365f934, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -67826,7 +68745,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_ArrayPanel
         m_Mode: 1
         m_Arguments:
@@ -68596,7 +69515,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1117318096}
-        m_TargetAssemblyTypeName: FocusCoachingDirecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: LessonDirector, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 3
         m_Arguments:

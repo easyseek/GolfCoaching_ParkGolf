@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public class VideoFInishPanel : MonoBehaviour
 {
     [SerializeField] VideoPlayerControl m_VideoPlayerControl = null;
-    [SerializeField] FocusCoachingDirecter m_FocusCoachingDirector = null;
+    [SerializeField] LessonDirector m_FocusCoachingDirector = null;
 
     [Header("[ RecommendVideo ]")]
     [SerializeField] private GameObject m_RecommendVideo = null;

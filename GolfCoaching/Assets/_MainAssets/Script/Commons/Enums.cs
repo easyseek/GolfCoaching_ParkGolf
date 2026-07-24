@@ -27,7 +27,8 @@ namespace Enums
         SetupMode,
         Studio,
         Recording,
-        PracticeMode_Video
+        PracticeMode_Video,
+        Recording_park
     }
 
     public enum ESetupMode
@@ -173,7 +174,8 @@ namespace Enums
         None = -1,
         Profile,
         Lesson,
-        Practice
+        Practice,
+        Stretching
     }
 
     public enum ELessonView

@@ -3,13 +3,16 @@ using Enums;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class VideoPlayerControl : MonoBehaviour
 {
     [Header("* UI Components")]
-    [SerializeField] FocusCoachingDirecter m_FocusCoachingdirector;
+    [SerializeField] LessonDirector m_FocusCoachingdirector;
     [SerializeField] VideoFInishPanel m_VideoFinishPanel;
+    [SerializeField] GameObject ResultPanel;
+    [SerializeField] GameObject PlayUI;
 
     [SerializeField] RectTransform TopPanel;
     [SerializeField] VLCVideoPlayer videoPlayer;
@@ -60,6 +63,9 @@ public class VideoPlayerControl : MonoBehaviour
     long _lastPlaybackTimeMs = -1;
     float _lastPlaybackProgressAt;
     Coroutine _updateCoroutine;
+    Coroutine _resumeSeekCoroutine;
+    bool _hasRequestedSeek;
+    float _requestedSeekPosition;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -71,15 +77,20 @@ public class VideoPlayerControl : MonoBehaviour
     public void PlayVideo(string url = null, ProVideoData data = null)
     {
         if (!object.ReferenceEquals(data, null))
+        {
             proVideoData = data;
+        }
 
         if (!string.IsNullOrEmpty(url))
+        {
             videoPlayer.url = url;
+        }
 
         if (_isPrepare == false)
         {
             videoPlayer.isLooping = _loopVideo;
             videoPlayer.started += OnVideoStarted;
+            videoPlayer.ended += OnVlcVideoEnded;
             _isPrepare = true;
 
             SldVideoContorol.onValueChanged.AddListener(OnValueChanged_SeekVideo);
@@ -87,11 +98,8 @@ public class VideoPlayerControl : MonoBehaviour
             SldRepeatEnd.onValueChanged.AddListener(OnValueChanged_RepeatEnd);
         }
 
+        ResetForNewVideo();
         OnClick_SetSpeed(0);
-        
-        txtRepeatInfo.gameObject.SetActive(false);
-        txtRepeatStart.gameObject.SetActive(false);
-        txtRepeatEnd.gameObject.SetActive(false);
 
         m_FocusCoachingdirector.LessonState = ELessonState.Play;
 
@@ -103,7 +111,51 @@ public class VideoPlayerControl : MonoBehaviour
         StartCoroutine(BeginPlayback());
 
         if (_updateCoroutine == null)
+        {
             _updateCoroutine = StartCoroutine(CoUpdate());
+        }
+    }
+
+    void ResetForNewVideo()
+    {
+        if (_resumeSeekCoroutine != null)
+        {
+            StopCoroutine(_resumeSeekCoroutine);
+            _resumeSeekCoroutine = null;
+        }
+
+        _isPlay = false;
+        _isRepeat = false;
+        _loopVideo = false;
+        _hasRequestedSeek = false;
+        _requestedSeekPosition = 0f;
+        _repeatStartValue = 0f;
+        _repeatEndValue = 1f;
+        _repeatStartTime = 0d;
+        _repeatEndTime = 0d;
+
+        videoPlayer.isLooping = false;
+        videoPlayer.position = 0f;
+
+        m_VideoFinishPanel.gameObject.SetActive(false);
+        ResultPanel.SetActive(false);
+        PlayUI.SetActive(true);
+        tglRepeat.SetIsOnWithoutNotify(false);
+        SldVideoContorol.SetValueWithoutNotify(0f);
+        SldRepeatStart.SetValueWithoutNotify(0f);
+        SldRepeatEnd.SetValueWithoutNotify(1f);
+        TimeSliderPanel.SetActive(true);
+        RepeatSliderPanel.SetActive(false);
+        txtRepeat.color = Color.white;
+        txtRepeatInfo.gameObject.SetActive(false);
+        txtRepeatStart.gameObject.SetActive(false);
+        txtRepeatEnd.gameObject.SetActive(false);
+        txtPstTime.text = "00:00";
+        txtRmnTime.text = "00:00";
+        imgPlay.enabled = false;
+        imgPause.enabled = false;
+
+        SetRepeatRangeFill();
     }
 
     private IEnumerator BeginPlayback()
@@ -160,7 +212,9 @@ public class VideoPlayerControl : MonoBehaviour
                     currentTimeMs > _lastPlaybackTimeMs + 20)
                 {
                     if (currentTimeMs > 0)
+                    {
                         _hasPlaybackProgress = true;
+                    }
 
                     _lastPlaybackTimeMs = currentTimeMs;
                     _lastPlaybackProgressAt = Time.unscaledTime;
@@ -184,6 +238,7 @@ public class VideoPlayerControl : MonoBehaviour
                     }
                 }
             }
+
             yield return null;
         }
     }
@@ -192,6 +247,9 @@ public class VideoPlayerControl : MonoBehaviour
     {
         _isVideoPrepared = true;
         _isPlay = true;
+        imgPlay.enabled = false;
+        imgPause.enabled = false;
+
         _lastPlaybackTimeMs = videoPlayer.time;
         _lastPlaybackProgressAt = Time.unscaledTime;
 
@@ -199,8 +257,23 @@ public class VideoPlayerControl : MonoBehaviour
         _repeatEndTime = videoPlayer.length;
     }
 
+    void OnVlcVideoEnded(VLCVideoPlayer vp)
+    {
+        if (!_isVideoPrepared || _isRepeat || _loopVideo || _endHandled)
+        {
+            return;
+        }
+
+        OnVideoEnd();
+    }
+
     void OnVideoEnd()
     {
+        if (_endHandled)
+        {
+            return;
+        }
+
         _endHandled = true;
 
         if (_loopVideo)
@@ -215,11 +288,35 @@ public class VideoPlayerControl : MonoBehaviour
             _isPlay = false;
             videoPlayer.Stop();
             m_FocusCoachingdirector.LessonState = ELessonState.End;
-            m_VideoFinishPanel.gameObject.SetActive(true);
-
-            if (proVideoData != null)
-                StartCoroutine(m_VideoFinishPanel.SetData(proVideoData));
+            PlayUI.SetActive(false);
+            ResultPanel.SetActive(true);
         }
+    }
+
+    public void OnClick_ResultRepeat()
+    {
+        if (proVideoData == null)
+        {
+            return;
+        }
+
+        PlayVideo(null, proVideoData);
+    }
+
+    public void OnClick_ResultList()
+    {
+        videoPlayer.Stop();
+        ResultPanel.SetActive(false);
+        PlayUI.SetActive(true);
+
+        m_FocusCoachingdirector.ReturnToVideoList();
+    }
+
+    public void OnClick_ResultExit()
+    {
+        videoPlayer.Stop();
+        GameManager.Instance.SelectedSceneName = string.Empty;
+        SceneManager.LoadScene("ModeSelect");
     }
 
     public void OnClick_SetSpeed(int SpdType)
@@ -245,7 +342,7 @@ public class VideoPlayerControl : MonoBehaviour
             {
                 _isPlay = true;
                 imgPlay.enabled = false;
-                videoPlayer.Play();
+                ResumeFromRequestedPosition();
             }
             else
             {
@@ -262,7 +359,7 @@ public class VideoPlayerControl : MonoBehaviour
                             SldVideoContorol.value = _repeatStartValue;
                         }
                     }*/
-                    videoPlayer.Play();
+                    ResumeFromRequestedPosition();
                 });
             }
         }
@@ -279,7 +376,6 @@ public class VideoPlayerControl : MonoBehaviour
     {
         TopPanel.DOLocalMoveY(1380f, 0.3f).From(960f);
     }
-
 
     public void OnClick_Repeat()
     {
@@ -327,10 +423,18 @@ public class VideoPlayerControl : MonoBehaviour
 
     public void OnValueChanged_SeekVideo(float sliderValue)
     {
-        if (_isVideoPrepared)
+        if (!_isVideoPrepared)
         {
-            videoPlayer.position = sliderValue;
+            return;
         }
+
+        _requestedSeekPosition = Mathf.Clamp01(sliderValue);
+        _hasRequestedSeek = true;
+        videoPlayer.position = _requestedSeekPosition;
+        _lastPlaybackTimeMs = videoPlayer.length > 0
+            ? (long)(videoPlayer.length * _requestedSeekPosition)
+            : -1;
+        _lastPlaybackProgressAt = Time.unscaledTime;
     }
 
     public void OnValueChanged_Repeat(bool isOn)
@@ -348,12 +452,62 @@ public class VideoPlayerControl : MonoBehaviour
     // 타임라인 슬라이더 업데이트
     void UpdateTimeSlider()
     {
-        if (_isVideoPrepared && videoPlayer.length > 0)
+        if (!_isVideoPrepared || videoPlayer.length <= 0)
         {
-            SldVideoContorol.SetValueWithoutNotify(videoPlayer.position);
+            return;
         }
+
+        float playerPosition = videoPlayer.position;
+        if (_hasRequestedSeek)
+        {
+            SldVideoContorol.SetValueWithoutNotify(_requestedSeekPosition);
+            if (Mathf.Abs(playerPosition - _requestedSeekPosition) <= 0.01f)
+            {
+                _hasRequestedSeek = false;
+            }
+
+            return;
+        }
+
+        SldVideoContorol.SetValueWithoutNotify(playerPosition);
     }
 
+    void ResumeFromRequestedPosition()
+    {
+        if (!_hasRequestedSeek)
+        {
+            videoPlayer.Resume();
+            return;
+        }
+
+        float resumePosition = _requestedSeekPosition;
+        if (_resumeSeekCoroutine != null)
+        {
+            StopCoroutine(_resumeSeekCoroutine);
+        }
+
+        _resumeSeekCoroutine = StartCoroutine(CoResumeFromPosition(resumePosition));
+    }
+
+    IEnumerator CoResumeFromPosition(float resumePosition)
+    {
+        videoPlayer.position = resumePosition;
+        videoPlayer.Resume();
+
+        for (int i = 0; i < 3; i++)
+        {
+            yield return null;
+            videoPlayer.position = resumePosition;
+        }
+
+        _requestedSeekPosition = resumePosition;
+        _hasRequestedSeek = false;
+        _lastPlaybackTimeMs = videoPlayer.length > 0
+            ? (long)(videoPlayer.length * resumePosition)
+            : -1;
+        _lastPlaybackProgressAt = Time.unscaledTime;
+        _resumeSeekCoroutine = null;
+    }
 
     
     public void OnValueChanged_RepeatStart(float sliderValue)
@@ -372,6 +526,7 @@ public class VideoPlayerControl : MonoBehaviour
                 sliderValue = _repeatEndValue - 0.05f;
                 SldRepeatStart.SetValueWithoutNotify(sliderValue);
             }
+
             _repeatStartTime = sliderValue * videoPlayer.length;
             _repeatStartValue = sliderValue;
             txtRepeatStart.text = FormatTime((float)(_repeatStartTime / 1000d));
@@ -395,6 +550,7 @@ public class VideoPlayerControl : MonoBehaviour
                 sliderValue = _repeatStartValue + 0.05f;
                 SldRepeatEnd.SetValueWithoutNotify(sliderValue);
             }
+
             _repeatEndTime = sliderValue * videoPlayer.length;
             _repeatEndValue = sliderValue;
             txtRepeatEnd.text = FormatTime((float)(_repeatEndTime / 1000d));
@@ -429,8 +585,13 @@ public class VideoPlayerControl : MonoBehaviour
             _updateCoroutine = null;
         }
 
-        if (videoPlayer != null)
-            videoPlayer.started -= OnVideoStarted;
-    }
+        if (_resumeSeekCoroutine != null)
+        {
+            StopCoroutine(_resumeSeekCoroutine);
+            _resumeSeekCoroutine = null;
+        }
 
+        videoPlayer.started -= OnVideoStarted;
+        videoPlayer.ended -= OnVlcVideoEnded;
+    }
 }

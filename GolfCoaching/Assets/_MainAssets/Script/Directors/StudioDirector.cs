@@ -296,6 +296,10 @@ public class StudioDirector : MonoBehaviour
                     {
                         m_PopupControl.ShowPopup(lessonStr, Utillity.Instance.HexToRGB(INI.Red), LoadRecordinig);
                     }
+                    else if (recordingType == ERecordingType.Stretching)
+                    {
+                        LoadStretchingRecording();
+                    }
 
                     // if (step.Count > 0 && swingType != ESwingType.None)
                     // {
@@ -351,6 +355,13 @@ public class StudioDirector : MonoBehaviour
                 GameManager.Instance.OnClick_OptionPanel();
                 break;
         }
+    }
+
+    public void LoadStretchingRecording()
+    {
+        GameManager.Instance.RecordingType = ERecordingType.Stretching;
+        GameManager.Instance.SelectedSceneName = "Recording_park";
+        SceneManager.LoadScene("Recording_park");
     }
 
     public void LoadRecordinig()
@@ -771,6 +782,10 @@ public class StudioDirector : MonoBehaviour
                 recordingType = ERecordingType.Practice;
 
                 //m_PracticeSwingToggles[0].onValueChanged.Invoke(true);
+            }
+            else if (num == 3)
+            {
+                recordingType = ERecordingType.Stretching;
             }
 
             for (int i = 0; i < m_ContentsObj.Length; i++)

@@ -22,19 +22,34 @@ public class VLCVideoPlayer : MonoBehaviour
     public float playbackSpeed
     {
         get => _mediaPlayer != null ? _mediaPlayer.Rate : 1f;
-        set { if (_mediaPlayer != null) _mediaPlayer.SetRate(value); }
+        set
+        {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.SetRate(value);
+            }
+        }
     }
+
     public float position
     {
         get => _mediaPlayer != null ? _mediaPlayer.Position : 0f;
-        set { if (_mediaPlayer != null) _mediaPlayer.Position = Mathf.Clamp01(value); }
+        set
+        {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.Position = Mathf.Clamp01(value);
+            }
+        }
     }
+
     public long time => _mediaPlayer != null ? _mediaPlayer.Time : 0;
     public long length => _mediaPlayer != null ? _mediaPlayer.Length : 0;
     public Texture2D texture => _videoTexture;
 
     // --- 이벤트 ---
     public event Action<VLCVideoPlayer> started;
+    public event Action<VLCVideoPlayer> ended;
 
     // --- 내부 VLC 로직 변수 ---
     private LibVLC _libVLC;
@@ -57,6 +72,7 @@ public class VLCVideoPlayer : MonoBehaviour
         Core.Initialize();
         _libVLC = new LibVLC("--no-osd");
         _mediaPlayer = new MediaPlayer(_libVLC);
+        _mediaPlayer.EndReached += OnMediaPlayerEndReached;
 
         _mediaPlayer.SetVideoFormatCallbacks(VideoFormatCallback, null);
         _mediaPlayer.SetVideoCallbacks(LockCallback, null, DisplayCallback);
@@ -80,12 +96,22 @@ public class VLCVideoPlayer : MonoBehaviour
     {
         // 1. 메인 스레드 큐 처리 (무한 루프 방지용 고정 개수 루프)
         int commandsCount = 0;
-        lock (_mainThreadQueue) { commandsCount = _mainThreadQueue.Count; }
+        lock (_mainThreadQueue)
+        {
+            commandsCount = _mainThreadQueue.Count;
+        }
 
         for (int i = 0; i < commandsCount; i++)
         {
             Action action = null;
-            lock (_mainThreadQueue) { if (_mainThreadQueue.Count > 0) action = _mainThreadQueue.Dequeue(); }
+            lock (_mainThreadQueue)
+            {
+                if (_mainThreadQueue.Count > 0)
+                {
+                    action = _mainThreadQueue.Dequeue();
+                }
+            }
+
             action?.Invoke();
         }
 
@@ -110,12 +136,26 @@ public class VLCVideoPlayer : MonoBehaviour
         }
     }
 
+    private void OnMediaPlayerEndReached(object sender, EventArgs e)
+    {
+        lock (_mainThreadQueue)
+        {
+            _mainThreadQueue.Enqueue(() => ended?.Invoke(this));
+        }
+    }
+
     public void Play()
     {
         Debug.Log("VLCVideoPlayer - Play() Start");
-        if (_mediaPlayer == null) return;
+        if (_mediaPlayer == null)
+        {
+            return;
+        }
 
-        if (targetDisplay != null) targetDisplay.color = Color.white;
+        if (targetDisplay != null)
+        {
+            targetDisplay.color = Color.white;
+        }
 
         // 1. 미디어가 아예 없거나 URL이 바뀐 경우에만 새로 로드
         if (_mediaPlayer.Media == null || _mediaPlayer.Media.Mrl != url)
@@ -157,19 +197,30 @@ public class VLCVideoPlayer : MonoBehaviour
                 _mediaPlayer.Play();
             }
         }
+
         Debug.Log("VLCVideoPlayer - Play() End");
     }
 
-    public void Pause() { _mediaPlayer?.Pause(); }
+    public void Pause()
+    {
+        if (_mediaPlayer != null)
+            _mediaPlayer.SetPause(true);
+    }
+
+    public void Resume()
+    {
+        if (_mediaPlayer != null)
+            _mediaPlayer.SetPause(false);
+    }
 
     public void TogglePause()
     {
         if (_mediaPlayer != null)
         {
             if (_mediaPlayer.IsPlaying)
-                _mediaPlayer.Pause();
+                _mediaPlayer.SetPause(true);
             else
-                _mediaPlayer.Play();
+                _mediaPlayer.SetPause(false);
         }
     }
     
@@ -177,14 +228,28 @@ public class VLCVideoPlayer : MonoBehaviour
     { 
         _mediaPlayer?.Stop(); 
         _hasStartedInvoked = false; 
+        _frameUpdated = false;
 
         // 정지 시 화면을 검은색으로 처리
-        if (targetDisplay != null) targetDisplay.color = Color.black;
+        if (targetDisplay != null)
+        {
+            targetDisplay.color = Color.black;
+        }
 
         // 3. UI 슬라이더 위치도 0으로 초기화
         if (progressBar != null)
         {
             progressBar.value = 0f;
+        }
+    }
+
+    public void StopAndRewind()
+    {
+        Stop();
+
+        if (_mediaPlayer != null)
+        {
+            _mediaPlayer.Position = 0f;
         }
     }
 
@@ -195,14 +260,21 @@ public class VLCVideoPlayer : MonoBehaviour
         _width = width; _height = height; pitches = width * 4; lines = height;
         long bufferSize = pitches * lines;
 
-        if (_texBuffer != IntPtr.Zero) Marshal.FreeHGlobal(_texBuffer);
+        if (_texBuffer != IntPtr.Zero)
+        {
+            Marshal.FreeHGlobal(_texBuffer);
+        }
+
         _texBuffer = Marshal.AllocHGlobal((int)bufferSize);
 
         lock (_mainThreadQueue)
         {
             _mainThreadQueue.Enqueue(() =>
             {
-                if (_videoTexture != null) Destroy(_videoTexture);
+                if (_videoTexture != null)
+                {
+                    Destroy(_videoTexture);
+                }
                 
                 // 가상 텍스처 생성
                 _videoTexture = new Texture2D((int)_width, (int)_height, TextureFormat.RGBA32, false);
@@ -214,12 +286,17 @@ public class VLCVideoPlayer : MonoBehaviour
                 }
             });
         }
+
         return 1;
     }
 
     private IntPtr LockCallback(IntPtr opaque, IntPtr planes)
     {
-        if (_texBuffer != IntPtr.Zero) Marshal.WriteIntPtr(planes, _texBuffer);
+        if (_texBuffer != IntPtr.Zero)
+        {
+            Marshal.WriteIntPtr(planes, _texBuffer);
+        }
+
         return IntPtr.Zero;
     }
 
@@ -266,9 +343,22 @@ public class VLCVideoPlayer : MonoBehaviour
 
     void OnDestroy()
     {
-        if (_mediaPlayer != null) { _mediaPlayer.Stop(); _mediaPlayer.Dispose(); }
+        if (_mediaPlayer != null)
+        {
+            _mediaPlayer.EndReached -= OnMediaPlayerEndReached;
+            _mediaPlayer.Stop();
+            _mediaPlayer.Dispose();
+        }
+
         _libVLC?.Dispose();
-        if (_texBuffer != IntPtr.Zero) Marshal.FreeHGlobal(_texBuffer);
-        if (_videoTexture != null) Destroy(_videoTexture);
+        if (_texBuffer != IntPtr.Zero)
+        {
+            Marshal.FreeHGlobal(_texBuffer);
+        }
+
+        if (_videoTexture != null)
+        {
+            Destroy(_videoTexture);
+        }
     }
 }
