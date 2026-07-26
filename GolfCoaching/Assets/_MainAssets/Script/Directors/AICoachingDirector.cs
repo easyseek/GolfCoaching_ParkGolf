@@ -105,6 +105,11 @@ public class AICoachingDirector : MonoBehaviour
     [SerializeField] private Graphic avgFillGraphic;
 
     [SerializeField] private Image m_PoseProgressImg;
+    [SerializeField] private Material m_PoseProgressGlowMaterial;
+    private Image m_PoseProgressGlowImg;
+    private Material m_PoseProgressGlowRuntimeMaterial;
+    private Image m_TotalProgressGlowImg;
+    private Material m_TotalProgressGlowRuntimeMaterial;
     [SerializeField] private Image m_TotalProgressImg;
     [SerializeField] private Image[] m_TotalStepProgressImgs;
     [SerializeField] private TextMeshProUGUI[] m_TotalStepScoreTexts;
@@ -351,6 +356,9 @@ public class AICoachingDirector : MonoBehaviour
 
     private void Init()
     {
+        CreatePoseProgressGlow();
+        CreateTotalProgressGlow();
+
         if (webcamTrackerController != null)
         {
             webcamTrackerController.SetTracker(true, true);
@@ -856,8 +864,12 @@ public class AICoachingDirector : MonoBehaviour
     {
         currentRatio = Mathf.Clamp01(currentRatio);
         int currentPercent = Mathf.RoundToInt(currentRatio * 100);
+        Color scoreColor = GetResultScoreColor(currentPercent);
 
+        m_TotalProgressImg.color = scoreColor;
+        m_TotalProgressGlowImg.color = scoreColor;
         m_TotalProgressImg.DOKill();
+        DOTween.Kill(m_TotalProgressGlowRuntimeMaterial);
 
         if (currentRateTween != null && currentRateTween.IsActive())
         {
@@ -865,12 +877,23 @@ public class AICoachingDirector : MonoBehaviour
         }
 
         m_TotalProgressImg.fillAmount = 0f;
+        m_TotalProgressGlowRuntimeMaterial.SetFloat("_FillAmount", 0.0f);
+        m_TotalProgressGlowRuntimeMaterial.SetFloat("_FillOrigin", m_TotalProgressImg.fillOrigin);
         m_MatchingRateText.text = "0<size=65%>%</size>";
 
         m_TotalProgressImg.DOFillAmount(currentRatio, 1.0f)
             .SetEase(Ease.OutQuad)
             .SetUpdate(true)
             .OnComplete(() => m_TotalProgressImg.fillAmount = currentRatio);
+
+        DOTween.To(
+                () => m_TotalProgressGlowRuntimeMaterial.GetFloat("_FillAmount"),
+                fillAmount => m_TotalProgressGlowRuntimeMaterial.SetFloat("_FillAmount", fillAmount),
+                currentRatio,
+                1.0f)
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(true)
+            .SetTarget(m_TotalProgressGlowRuntimeMaterial);
 
         currentRateTween = DOTween.To(() => 0, value =>
         {
@@ -1422,6 +1445,57 @@ public class AICoachingDirector : MonoBehaviour
         }
     }
 
+    private void CreatePoseProgressGlow()
+    {
+        GameObject glowObject = new GameObject("GaugeGlow", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        RectTransform glowRect = glowObject.GetComponent<RectTransform>();
+        RectTransform gaugeRect = m_PoseProgressImg.rectTransform;
+
+        glowObject.layer = m_PoseProgressImg.gameObject.layer;
+        glowRect.SetParent(gaugeRect.parent, false);
+        glowRect.SetSiblingIndex(gaugeRect.GetSiblingIndex());
+        glowRect.anchorMin = gaugeRect.anchorMin;
+        glowRect.anchorMax = gaugeRect.anchorMax;
+        glowRect.pivot = gaugeRect.pivot;
+        glowRect.anchoredPosition = gaugeRect.anchoredPosition;
+        glowRect.sizeDelta = gaugeRect.sizeDelta * 1.45f;
+        glowRect.localScale = Vector3.one;
+
+        m_PoseProgressGlowImg = glowObject.GetComponent<Image>();
+        m_PoseProgressGlowImg.raycastTarget = false;
+        m_PoseProgressGlowImg.sprite = m_PoseProgressImg.sprite;
+        m_PoseProgressGlowRuntimeMaterial = new Material(m_PoseProgressGlowMaterial);
+        m_PoseProgressGlowRuntimeMaterial.SetFloat("_FillAmount", 0.0f);
+        m_PoseProgressGlowRuntimeMaterial.SetFloat("_FillOrigin", m_PoseProgressImg.fillOrigin);
+        m_PoseProgressGlowImg.material = m_PoseProgressGlowRuntimeMaterial;
+        m_PoseProgressGlowImg.type = Image.Type.Simple;
+    }
+
+    private void CreateTotalProgressGlow()
+    {
+        GameObject glowObject = new GameObject("TotalGaugeGlow", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        RectTransform glowRect = glowObject.GetComponent<RectTransform>();
+        RectTransform gaugeRect = m_TotalProgressImg.rectTransform;
+
+        glowObject.layer = m_TotalProgressImg.gameObject.layer;
+        glowRect.SetParent(gaugeRect.parent, false);
+        glowRect.SetSiblingIndex(gaugeRect.GetSiblingIndex());
+        glowRect.anchorMin = gaugeRect.anchorMin;
+        glowRect.anchorMax = gaugeRect.anchorMax;
+        glowRect.pivot = gaugeRect.pivot;
+        glowRect.anchoredPosition = gaugeRect.anchoredPosition;
+        glowRect.sizeDelta = gaugeRect.sizeDelta * 1.45f;
+        glowRect.localScale = Vector3.one;
+
+        m_TotalProgressGlowImg = glowObject.GetComponent<Image>();
+        m_TotalProgressGlowImg.raycastTarget = false;
+        m_TotalProgressGlowImg.sprite = m_TotalProgressImg.sprite;
+        m_TotalProgressGlowRuntimeMaterial = new Material(m_PoseProgressGlowMaterial);
+        m_TotalProgressGlowRuntimeMaterial.SetFloat("_FillAmount", 0.0f);
+        m_TotalProgressGlowImg.material = m_TotalProgressGlowRuntimeMaterial;
+        m_TotalProgressGlowImg.type = Image.Type.Simple;
+    }
+
     public void AnimateProgress(int value, float duration = 1.0f)
     {
         m_CurPoseScoreText.text = $"0<size=60%>%</size>";
@@ -1429,9 +1503,19 @@ public class AICoachingDirector : MonoBehaviour
         Color scoreColor = GetResultScoreColor(value);
 
         m_PoseProgressImg.color = scoreColor;
+        m_PoseProgressGlowImg.color = scoreColor;
         m_PoseProgressImg.fillAmount = 0f;
+        m_PoseProgressGlowRuntimeMaterial.SetFloat("_FillAmount", 0.0f);
         m_PoseProgressImg.DOKill();
+        DOTween.Kill(m_PoseProgressGlowRuntimeMaterial);
         m_PoseProgressImg.DOFillAmount(value / 100f, duration).SetEase(Ease.OutQuad);
+        DOTween.To(
+                () => m_PoseProgressGlowRuntimeMaterial.GetFloat("_FillAmount"),
+                fillAmount => m_PoseProgressGlowRuntimeMaterial.SetFloat("_FillAmount", fillAmount),
+                value / 100f,
+                duration)
+            .SetEase(Ease.OutQuad)
+            .SetTarget(m_PoseProgressGlowRuntimeMaterial);
 
         DOTween.To(() => 0, x =>
         {
@@ -5135,6 +5219,11 @@ public class AICoachingDirector : MonoBehaviour
     private void OnDestroy()
     {
         StopTotalUserSwingPlayback();
+
+        DOTween.Kill(m_PoseProgressGlowRuntimeMaterial);
+        DOTween.Kill(m_TotalProgressGlowRuntimeMaterial);
+        Destroy(m_PoseProgressGlowRuntimeMaterial);
+        Destroy(m_TotalProgressGlowRuntimeMaterial);
 
         if (totalUserFrontTexture != null)
         {

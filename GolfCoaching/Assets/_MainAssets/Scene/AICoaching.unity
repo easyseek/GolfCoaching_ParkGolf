@@ -13324,8 +13324,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.508}
-  m_SizeDelta: {x: 436, y: 345.489}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 376, y: 282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &531066758
 MonoBehaviour:
@@ -13347,7 +13347,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 89fab5d40a2a3f23883d5e6cf0f1c942, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 691401821da2a551590137ee90bd2180, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14815,7 +14815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.09803922}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -28477,6 +28477,7 @@ MonoBehaviour:
   myFillGraphic: {fileID: 0}
   avgFillGraphic: {fileID: 0}
   m_PoseProgressImg: {fileID: 1173464009}
+  m_PoseProgressGlowMaterial: {fileID: 2100000, guid: a792eca25aae478cb43888b16c1319ac, type: 2}
   m_TotalProgressImg: {fileID: 531066758}
   m_TotalStepProgressImgs:
   - {fileID: 830615048}
@@ -51050,7 +51051,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 476, y: 382}
+  m_SizeDelta: {x: 376, y: 282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1944124964
 MonoBehaviour:
@@ -51065,14 +51066,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 79fd2c69043dd4113ad8b88a4dfe5edc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db48d2d672e86cbd3b4dc3c1de79070b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
