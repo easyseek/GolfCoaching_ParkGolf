@@ -630,11 +630,9 @@ public class StudioDirector : MonoBehaviour
                 step.Add(SWINGSTEP.ADDRESS);
                 step.Add(SWINGSTEP.TAKEBACK);
                 step.Add(SWINGSTEP.BACKSWING);
-                step.Add(SWINGSTEP.TOP);
                 step.Add(SWINGSTEP.DOWNSWING);
                 step.Add(SWINGSTEP.IMPACT);
                 step.Add(SWINGSTEP.FOLLOW);
-                step.Add(SWINGSTEP.FINISH);
                 break;
         }
     }

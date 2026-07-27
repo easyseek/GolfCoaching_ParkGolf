@@ -1462,6 +1462,7 @@ public class RecordingDirector : MonoBehaviour
         (int, int) W_Takeback = (R0(0.08f), R1(0.45f));
         (int, int) W_Backswing = (R0(0.18f), R1(0.55f));
         (int, int) W_Downswing = (R0(0.30f), R1(0.72f));
+        (int, int) W_Impact = (R0(0.34f), R1(0.80f));
         (int, int) W_Follow = (R0(0.36f), R1(0.86f));
         (int, int) W_Finish = (R0(0.75f), R1(1.00f));
 
@@ -1797,7 +1798,41 @@ public class RecordingDirector : MonoBehaviour
             }
         }
 
-        if (stepIndex[4] >= 0) stepIndex[5] = stepIndex[4];
+        {
+            int t = Mathf.RoundToInt(proTargets[5]);
+            int start = Mathf.Max(cur, W_Impact.Item1);
+            int end = W_Impact.Item2;
+
+            int idx = FindNextInRange(handNF, start, end, t);
+
+            if (idx < 0)
+            {
+                idx = FindClosestInRange(
+                    handNF,
+                    start,
+                    end,
+                    t,
+                    maxAbsDiff: 40,
+                    preferEarly: true);
+            }
+
+            if (idx < 0)
+            {
+                idx = FindClosestInRange(
+                    handNF,
+                    start,
+                    end,
+                    t,
+                    maxAbsDiff: 360,
+                    preferEarly: true);
+            }
+
+            if (idx >= 0)
+            {
+                stepIndex[5] = idx;
+                cur = idx + 1;
+            }
+        }
 
         {
             int t = Mathf.RoundToInt(proTargets[6]);

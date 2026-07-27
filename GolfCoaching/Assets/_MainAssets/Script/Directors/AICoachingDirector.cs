@@ -47,7 +47,6 @@ public class AICoachingDirector : MonoBehaviour
     [Header("* 5.RESULT")]
     [SerializeField] private GameObject PanelResult;
     [SerializeField] private GameObject m_AnalyzeGroup;
-    [SerializeField] private GameObject m_Lesson;
     [SerializeField] private GameObject m_AnalyzeTotal;
     [SerializeField] private GameObject m_AnalyzePose;
     [SerializeField] private GameObject m_TotalTop;
@@ -1961,7 +1960,6 @@ public class AICoachingDirector : MonoBehaviour
             _isTotalAnalyze = true;
             SetRealViewMode(true);
             m_AnalyzeGroup.SetActive(true);
-            m_Lesson.SetActive(false);
             m_TotalTop.SetActive(true);
             m_TotalStepGauge.SetActive(true);
             m_StepTop.SetActive(false);
@@ -1980,7 +1978,6 @@ public class AICoachingDirector : MonoBehaviour
             ResetTotalSwingVideos();
             SetRealViewMode(false);
             m_AnalyzeGroup.SetActive(true);
-            m_Lesson.SetActive(false);
             m_TotalTop.SetActive(false);
             m_TotalStepGauge.SetActive(false);
             m_StepTop.SetActive(true);
@@ -3281,6 +3278,7 @@ public class AICoachingDirector : MonoBehaviour
         (int, int) W_Takeback = (R0(0.08f), R1(0.45f));
         (int, int) W_Backswing = (R0(0.18f), R1(0.55f));
         (int, int) W_Downswing = (R0(0.30f), R1(0.72f));
+        (int, int) W_Impact = (R0(0.34f), R1(0.80f));
         (int, int) W_Follow = (R0(0.36f), R1(0.86f));
         (int, int) W_Finish = (R0(0.75f), R1(1.00f));
 
@@ -3644,10 +3642,41 @@ public class AICoachingDirector : MonoBehaviour
             }
         }
 
-        // IMPACT = DOWNSWING
-        if (stepIndex[4] >= 0)
+        // IMPACT
         {
-            stepIndex[5] = stepIndex[4];
+            int t = Mathf.RoundToInt(proTargets[5]);
+            int start = Mathf.Max(cur, W_Impact.Item1);
+            int end = W_Impact.Item2;
+
+            int idx = FindNextInRange(handNF, start, end, t);
+
+            if (idx < 0)
+            {
+                idx = FindClosestInRange(
+                    handNF,
+                    start,
+                    end,
+                    t,
+                    maxAbsDiff: 40,
+                    preferEarly: true);
+            }
+
+            if (idx < 0)
+            {
+                idx = FindClosestInRange(
+                    handNF,
+                    start,
+                    end,
+                    t,
+                    maxAbsDiff: 360,
+                    preferEarly: true);
+            }
+
+            if (idx >= 0)
+            {
+                stepIndex[5] = idx;
+                cur = idx + 1;
+            }
         }
 
         // FOLLOW
