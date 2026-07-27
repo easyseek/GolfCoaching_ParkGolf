@@ -122,11 +122,10 @@ public class MirrorGuideController : MonoBehaviour
     int turnPauseAngle = 175;
     int turnTakeback = 170;
     int turnBackswing = 140;
-    int turnTop = 100;
-    int turnDownswind = 130;
+    int backswingMinAngle = 360;
+    int backswingRiseFrameCount = 0;
     int turnImpact = 170;
     int turnFollow = 200;
-    int turnFinish = 260;
 
     SWINGSTEP swingStep = SWINGSTEP.READY;
     bool isReverse = true;
@@ -174,8 +173,6 @@ public class MirrorGuideController : MonoBehaviour
     void Start()
     {
         LoadSwingStepData();
-        swingStepData = GolfProDataManager.Instance.SelectProData.swingData.dicFull[EClub.MiddleIron];
-        SetTurnAngle();
 
         ResetProLine();
         BalanaceLeft.SetActive(false);
@@ -195,8 +192,6 @@ public class MirrorGuideController : MonoBehaviour
         ProShoulderAngleRoot_Front.gameObject.SetActive(false);
         ProPelvisAngleRoot_Front.gameObject.SetActive(false);
         
-        //프로 원본 스켈레톤
-        swingStepSkData = GolfProDataManager.Instance.GetLandmarkStepData(GolfProDataManager.Instance.SelectProData.uid, false, 0, club: EClub.MiddleIron);
         LoadSkeletonSwint(SWINGSTEP.ADDRESS);
 
         SetReady();
@@ -206,44 +201,57 @@ public class MirrorGuideController : MonoBehaviour
 
     public bool LoadSwingStepData()
     {
-        if(eSwingType == ESwingType.Full)
+        ProSwingStepData loadedData = null;
+
+        if (eSwingType == ESwingType.Full)
         {
-            if(GolfProDataManager.Instance.SelectProData.swingData.dicFull.ContainsKey(eClub))
+            if (GolfProDataManager.Instance.SelectProData.swingData.dicFull.ContainsKey(eClub))
             {
-                swingStepData = GolfProDataManager.Instance.SelectProData.swingData.dicFull[eClub];
-                return true;
-                //eSwingType = ESwingType.Full;
-                //eClub = EClub.MiddleIron;
+                loadedData = GolfProDataManager.Instance.SelectProData.swingData.dicFull[eClub];
             }
             else
+            {
                 return false;
-            
+            }
         }
-        else if(eSwingType == ESwingType.ThreeQuarter)
+        else if (eSwingType == ESwingType.ThreeQuarter)
         {
-            if(GolfProDataManager.Instance.SelectProData.swingData.dicQuarter.ContainsKey(eClub))
+            if (GolfProDataManager.Instance.SelectProData.swingData.dicQuarter.ContainsKey(eClub))
             {
-                swingStepData = GolfProDataManager.Instance.SelectProData.swingData.dicQuarter[eClub];
-                return true;
+                loadedData = GolfProDataManager.Instance.SelectProData.swingData.dicQuarter[eClub];
             }
             else
+            {
                 return false;
+            }
         }
-        else if(eSwingType == ESwingType.Half)
+        else if (eSwingType == ESwingType.Half)
         {
-            if(GolfProDataManager.Instance.SelectProData.swingData.dicHalf.ContainsKey(eClub))
+            if (GolfProDataManager.Instance.SelectProData.swingData.dicHalf.ContainsKey(eClub))
             {
-                swingStepData = GolfProDataManager.Instance.SelectProData.swingData.dicHalf[eClub];
-                return true;
+                loadedData = GolfProDataManager.Instance.SelectProData.swingData.dicHalf[eClub];
             }
             else
+            {
                 return false;
+            }
         }
         else
         {
             return false;
         }
 
+        swingStepData = loadedData;
+        swingStepSkData = GolfProDataManager.Instance.GetLandmarkStepData(
+            GolfProDataManager.Instance.SelectProData.uid,
+            false,
+            eSwingType,
+            eClub);
+
+        SetTurnAngle();
+        LoadSkeletonSwint(swingStep);
+
+        return true;
     }
 
     // Update is called once per frame
@@ -283,11 +291,8 @@ public class MirrorGuideController : MonoBehaviour
         //turnPauseAngle = (GetSwingDataValue("GetHandDir", SWINGSTEP.ADDRESS);
         turnTakeback = (GetSwingDataValue("GetHandDir", SWINGSTEP.ADDRESS) + GetSwingDataValue("GetHandDir", SWINGSTEP.TAKEBACK)) / 2;//- 8;
         turnBackswing = (GetSwingDataValue("GetHandDir", SWINGSTEP.TAKEBACK) + GetSwingDataValue("GetHandDir", SWINGSTEP.BACKSWING)) / 2;
-        turnTop = (int)((GetSwingDataValue("GetHandDir", SWINGSTEP.BACKSWING) + GetSwingDataValue("GetHandDir", SWINGSTEP.TOP)) / 1.8);//2;
-        turnDownswind = (GetSwingDataValue("GetHandDir", SWINGSTEP.TOP) + GetSwingDataValue("GetHandDir", SWINGSTEP.DOWNSWING)) / 2;
         turnImpact = (GetSwingDataValue("GetHandDir", SWINGSTEP.DOWNSWING) + GetSwingDataValue("GetHandDir", SWINGSTEP.IMPACT)) / 2;
         turnFollow = (GetSwingDataValue("GetHandDir", SWINGSTEP.IMPACT) + GetSwingDataValue("GetHandDir", SWINGSTEP.FOLLOW)) / 2;
-        turnFinish = GetSwingDataValue("GetHandDir", SWINGSTEP.FOLLOW) + 15;
         turnPauseAngle = turnTakeback;
     }
 
@@ -498,8 +503,31 @@ public class MirrorGuideController : MonoBehaviour
 
     void SetSwingStepInfo(SWINGSTEP step)
     {
+        int displayStep = -1;
 
-        moveStepX = -75f - (250f * ((int)step + 1));
+        switch (step)
+        {
+            case SWINGSTEP.ADDRESS:
+                displayStep = 0;
+                break;
+            case SWINGSTEP.TAKEBACK:
+                displayStep = 1;
+                break;
+            case SWINGSTEP.BACKSWING:
+                displayStep = 2;
+                break;
+            case SWINGSTEP.DOWNSWING:
+                displayStep = 3;
+                break;
+            case SWINGSTEP.IMPACT:
+                displayStep = 4;
+                break;
+            case SWINGSTEP.FOLLOW:
+                displayStep = 5;
+                break;
+        }
+
+        moveStepX = -75f - (250f * (displayStep + 1));
     }
 
 
@@ -538,7 +566,6 @@ public class MirrorGuideController : MonoBehaviour
     {
         int swingAngle = sensorProcess.iGetHandDir;
         int swingAngleBtm = sensorProcess.iGetHandDirFromBottom;
-        //txtDebug.text = $"swingAngle : {swingAngle}\r\nturnTop:{turnTop}";
         //골반 테스트
                 
         ProLeftPelvis = (SkLandmark2Ds[23].position * adjustRate) + adjustDir; //보정된 프로의 골반 위치
@@ -673,6 +700,8 @@ public class MirrorGuideController : MonoBehaviour
                 {
                     MoveStep = 0;
                     swingStep = SWINGSTEP.BACKSWING;
+                    backswingMinAngle = swingAngle;
+                    backswingRiseFrameCount = 0;
                     SetSwingStepInfo(swingStep);
                     ResetProLine();
                     ResetCheckString();
@@ -698,42 +727,24 @@ public class MirrorGuideController : MonoBehaviour
                     //CheckHandSideAngle(); //측면 손이 벗어나는지 여부  
                 }
 
-                if (swingAngle <= turnTop || MoveStep > 0)
+                if (swingAngle < backswingMinAngle)
+                {
+                    backswingMinAngle = swingAngle;
+                    backswingRiseFrameCount = 0;
+                }
+                else if (swingAngle >= backswingMinAngle + 6)
+                {
+                    backswingRiseFrameCount++;
+                }
+                else
+                {
+                    backswingRiseFrameCount = 0;
+                }
+
+                if (backswingRiseFrameCount >= 2 || MoveStep > 0)
                 {
                     MoveStep = 0;
-                    swingStep = SWINGSTEP.TOP;
-                    SetSwingStepInfo(swingStep);
-                    ResetProLine();
                     isReverse = false;
-                    ResetCheckString();
-                    LoadSkeletonSwint(swingStep);
-                }
-            }
-        }
-        else
-        {
-            if (swingStep == SWINGSTEP.TOP)
-            {
-                if (CoachingVisible)
-                {
-                    CheckHandSidePosition(); //측면 손 위치
-                    //CheckHandDir(); //정면 손 위치
-                    CheckGetFootDisRate();//다리 간격
-                    CheckGetKneeDisRate();//무릎 간격
-
-                    CheckWaistSideDir(); //1
-                    CheckShoulderAngle(); //2
-                    CheckPelvisAngle(); //3
-
-                    CheckBalance(); //4
-                    CheckHeadDir(); //5
-
-                    //CheckHandSideAngle(); //측면 손이 벗어나는지 여부  
-                }
-
-                if (swingAngle >= turnDownswind || MoveStep > 0)
-                {
-                    MoveStep = 0;
                     swingStep = SWINGSTEP.DOWNSWING;
                     SetSwingStepInfo(swingStep);
                     ResetProLine();
@@ -741,7 +752,10 @@ public class MirrorGuideController : MonoBehaviour
                     LoadSkeletonSwint(swingStep);
                 }
             }
-            else if (swingStep == SWINGSTEP.DOWNSWING)
+        }
+        else
+        {
+            if (swingStep == SWINGSTEP.DOWNSWING)
             {
                 if (CoachingVisible)
                 {
@@ -818,35 +832,7 @@ public class MirrorGuideController : MonoBehaviour
                     //CheckHandSideAngle(); //측면 손이 벗어나는지 여부  
                 }
 
-                if (swingAngle >= turnFinish || MoveStep > 0)
-                {
-                    MoveStep = 0;
-                    swingStep = SWINGSTEP.FINISH;
-                    SetSwingStepInfo(swingStep);
-                    ResetProLine();
-                    ResetCheckString();
-                    LoadSkeletonSwint(swingStep);
-                }
-            }
-            else if (swingStep == SWINGSTEP.FINISH)
-            {
-                if (CoachingVisible)
-                {
-                    //CheckHandSidePosition(); //측면 손 위치
-                    CheckGetFootDisRate();//다리 간격
-                    CheckGetKneeDisRate();//무릎 간격
-
-                    CheckWaistSideDir(); //1
-                    //CheckShoulderAngle(); //2
-                    //CheckPelvisAngle(); //3
-
-                    CheckBalance(); //4
-                    //CheckHeadDir(); //5
-
-                    //CheckHandSideAngle(); //측면 손이 벗어나는지 여부  
-                }
-                
-                if (swingAngle < 190 && swingAngle > 170 || MoveStep > 0)
+                if ((swingAngle < 190 && swingAngle > 170) || MoveStep > 0)
                 {
                     SetReady();
                 }
@@ -857,7 +843,7 @@ public class MirrorGuideController : MonoBehaviour
         {
 
             //자세 풀기
-            if ((swingStep != SWINGSTEP.FINISH && sensorProcess.IsAddressHand(false) == false && swingAngle < 200 && swingAngle > 160) || MoveStep < 0)
+            if ((sensorProcess.IsAddressHand(false) == false && swingAngle < 200 && swingAngle > 160) || MoveStep < 0)
             {
                 SetReady();
             }
@@ -898,6 +884,8 @@ public class MirrorGuideController : MonoBehaviour
         guideLineSide.LinePause = false;
         guideLineFront.LinePause = false;
         isReverse = true;
+        backswingMinAngle = 360;
+        backswingRiseFrameCount = 0;
         SideHandSideDistanceScale = -1f;
         FrontHandSideDistanceScale = -1f;
         HandFrontDistance = -1f;
