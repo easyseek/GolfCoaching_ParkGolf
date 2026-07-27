@@ -3092,10 +3092,13 @@ MonoBehaviour:
   viewerWebcam: {fileID: 5400299269810560036}
   repeatToggle: {fileID: 222513730}
   cameraToggle: {fileID: 345402590}
+  swapToggle: {fileID: 1695591819}
   webcamCtrl: {fileID: 1571245941}
   rawFront: {fileID: 4035395342044126900}
   rawSide: {fileID: 2572410577035342639}
   videoPlayer: {fileID: 546241145}
+  frontCameraView: {fileID: 2522628179897525274}
+  videoView: {fileID: 546241142}
   countTime: 5
   videoWaitTime: 5
 --- !u!1 &1139979361

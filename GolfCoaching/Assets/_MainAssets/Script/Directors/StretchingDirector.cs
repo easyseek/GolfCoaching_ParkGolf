@@ -15,10 +15,13 @@ public class StretchingDirector : MonoBehaviour
     [SerializeField] private GameObject viewerWebcam;
     [SerializeField] private Toggle repeatToggle;
     [SerializeField] private Toggle cameraToggle;
+    [SerializeField] private Toggle swapToggle;
     [SerializeField] private WebcamTrackerController webcamCtrl;
     [SerializeField] private RawImage rawFront;
     [SerializeField] private RawImage rawSide;
     [SerializeField] private VLCVideoPlayer videoPlayer;
+    [SerializeField] private RectTransform frontCameraView;
+    [SerializeField] private RectTransform videoView;
     [SerializeField] private float countTime = 3f;
     [SerializeField] private float videoWaitTime = 5f;
 
@@ -31,9 +34,21 @@ public class StretchingDirector : MonoBehaviour
     private Coroutine countCo;
     private Coroutine endCo;
     private Coroutine readyCo;
+    private ViewLayout frontCameraLayout;
+    private ViewLayout videoLayout;
+    private RectTransform viewCanvas;
+
+    private struct ViewLayout
+    {
+        public Vector2 center;
+        public Vector2 screenSize;
+        public Vector2 sourceSize;
+        public Vector3 sourceScale;
+    }
 
     private void Start()
     {
+        SaveViewLayouts();
         InitToggles();
         InitView();
 
@@ -55,6 +70,13 @@ public class StretchingDirector : MonoBehaviour
             isCamOn = cameraToggle.isOn;
             cameraToggle.onValueChanged.RemoveListener(OnValueChanged_Camera);
             cameraToggle.onValueChanged.AddListener(OnValueChanged_Camera);
+        }
+
+        if (swapToggle != null)
+        {
+            swapToggle.onValueChanged.RemoveListener(OnValueChanged_Swap);
+            swapToggle.onValueChanged.AddListener(OnValueChanged_Swap);
+            ApplyViewSwap(swapToggle.isOn);
         }
     }
 
@@ -298,6 +320,77 @@ public class StretchingDirector : MonoBehaviour
         isCamOn = isOn;
 
         SetCameraView(isCamOn);
+    }
+
+    public void OnValueChanged_Swap(bool isOn)
+    {
+        ApplyViewSwap(isOn);
+    }
+
+    private void SaveViewLayouts()
+    {
+        Canvas.ForceUpdateCanvases();
+        viewCanvas = videoView.parent as RectTransform;
+        frontCameraLayout = CaptureViewLayout(frontCameraView);
+        videoLayout = CaptureViewLayout(videoView);
+
+        frontCameraView.SetParent(viewCanvas, true);
+        videoView.SetParent(viewCanvas, true);
+    }
+
+    private ViewLayout CaptureViewLayout(RectTransform view)
+    {
+        Vector3[] corners = new Vector3[4];
+        view.GetWorldCorners(corners);
+
+        Vector2 bottomLeft = viewCanvas.InverseTransformPoint(corners[0]);
+        Vector2 topRight = viewCanvas.InverseTransformPoint(corners[2]);
+        ViewLayout layout = new ViewLayout();
+        layout.center = (bottomLeft + topRight) * 0.5f;
+        layout.screenSize = new Vector2(
+            Mathf.Abs(topRight.x - bottomLeft.x),
+            Mathf.Abs(topRight.y - bottomLeft.y));
+        layout.sourceSize = view.rect.size;
+        layout.sourceScale = view.localScale;
+
+        return layout;
+    }
+
+    private void ApplyViewSwap(bool isSwapped)
+    {
+        ViewLayout targetFrontLayout = isSwapped ? videoLayout : frontCameraLayout;
+        ViewLayout targetVideoLayout = isSwapped ? frontCameraLayout : videoLayout;
+
+        ApplyViewLayout(frontCameraView, frontCameraLayout, targetFrontLayout);
+        ApplyViewLayout(videoView, videoLayout, targetVideoLayout);
+
+        if (isSwapped)
+        {
+            frontCameraView.SetAsFirstSibling();
+            videoView.SetSiblingIndex(1);
+        }
+        else
+        {
+            videoView.SetAsFirstSibling();
+            frontCameraView.SetSiblingIndex(1);
+        }
+    }
+
+    private void ApplyViewLayout(RectTransform view, ViewLayout sourceLayout, ViewLayout targetLayout)
+    {
+        view.SetParent(viewCanvas, false);
+        view.anchorMin = new Vector2(0.5f, 0.5f);
+        view.anchorMax = new Vector2(0.5f, 0.5f);
+        view.pivot = new Vector2(0.5f, 0.5f);
+        view.sizeDelta = sourceLayout.sourceSize;
+        view.anchoredPosition = targetLayout.center;
+
+        float scaleX = targetLayout.screenSize.x / sourceLayout.screenSize.x;
+        float scaleY = targetLayout.screenSize.y / sourceLayout.screenSize.y;
+        view.localScale = new Vector3(
+            sourceLayout.sourceScale.x * scaleX,
+            sourceLayout.sourceScale.y * scaleY,
+            sourceLayout.sourceScale.z);
     }
 
     private void ShowResult()
